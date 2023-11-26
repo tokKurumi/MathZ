@@ -1,0 +1,6 @@
+@MathZ.Services.AdminAPI_HostAddress = http://localhost:5106
+
+GET {{MathZ.Services.AdminAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

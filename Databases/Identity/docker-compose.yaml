@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: postgres
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: kurumi
+      POSTGRES_PASSWORD: T0qatlc1UDxRDiJfGrYJ8ChRPe2uI5zz
+      POSTGRES_DB: MathZ.Identity
+    volumes:
+      - ./MathZ.Identity:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:7.4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: tkurumi901@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: T0qatlc1UDxRDiJfGrYJ8ChRPe2uI5zz
+    ports:
+      - "5050:80"
