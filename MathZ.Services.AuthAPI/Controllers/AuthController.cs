@@ -1,8 +1,10 @@
 ﻿namespace MathZ.Services.AuthAPI.Controllers
 {
+    using System.Security.Authentication;
     using MathZ.Services.AuthAPI.Exceptions;
     using MathZ.Services.AuthAPI.Services.IServices;
     using MathZ.Shared.Models.Dto;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
@@ -16,6 +18,7 @@
         }
 
         [HttpPost("Register")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register([FromBody] UserAccountRegistrationRequestDto model)
         {
             try
@@ -27,6 +30,21 @@
             catch (CreateUserException ex)
             {
                 return BadRequest(ex.Problems);
+            }
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] UserAccountLoginRequestDto model)
+        {
+            try
+            {
+                var result = await _authService.Login(model);
+
+                return Ok(result);
+            }
+            catch (AuthenticationException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
             }
         }
     }

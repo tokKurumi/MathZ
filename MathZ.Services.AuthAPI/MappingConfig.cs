@@ -1,6 +1,7 @@
 ﻿namespace MathZ.Services.AuthAPI
 {
     using AutoMapper;
+    using MathZ.Services.AuthAPI.Models.Dto;
     using MathZ.Shared.Models;
     using MathZ.Shared.Models.Dto;
 
@@ -36,6 +37,13 @@
                         NormalizedUserName = converter.Login.ToUpper(),
                         FirstName = converter.FirstName,
                         LastName = converter.LastName,
+                    });
+
+                config.CreateMap<UserAccountRegistrationRequestDto, UserAccountAssignRolesRequestDto>()
+                    .ConstructUsing(converter => new UserAccountAssignRolesRequestDto()
+                    {
+                        Login = converter.Login,
+                        Roles = converter.Roles,
                     });
             });
         }

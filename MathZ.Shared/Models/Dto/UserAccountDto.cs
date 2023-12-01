@@ -9,5 +9,7 @@
         public string FirstName { get; set; } = string.Empty;
 
         public string LastName { get; set; } = string.Empty;
+
+        public IEnumerable<string> Roles { get; set; } = Enumerable.Empty<string>();
     }
 }
