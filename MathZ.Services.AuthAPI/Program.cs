@@ -8,7 +8,6 @@ namespace MathZ.Services.AuthAPI
     using MathZ.Shared.Models;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
     using Swashbuckle.AspNetCore.Filters;
@@ -18,11 +17,13 @@ namespace MathZ.Services.AuthAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.AddServiceDefaults();
 
-            builder.Services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+            builder.Services
+                .AddScoped<IJwtGeneratorService, JwtGeneratorService>()
+                .AddScoped<IAuthService, AuthService>();
+
+            builder.AddNpgsqlDbContext<AppDbContext>("usersDb");
 
             builder.Services.AddIdentity<UserAccount, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
@@ -68,11 +69,9 @@ namespace MathZ.Services.AuthAPI
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
-            builder.Services
-                .AddScoped<IJwtGeneratorService, JwtGeneratorService>()
-                .AddScoped<IAuthService, AuthService>();
-
             var app = builder.Build();
+
+            app.MapDefaultEndpoints();
 
             app.UseSwagger();
             app.UseSwaggerUI();

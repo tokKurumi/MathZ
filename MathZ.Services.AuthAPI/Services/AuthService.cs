@@ -37,12 +37,8 @@
         public async Task<IEnumerable<string>> AsignRoles(UserAccountAssignRolesRequestDto assignRolesRequestDto)
         {
             var user = await _dbContext.Users
-                .FirstOrDefaultAsync(user => user.UserName == assignRolesRequestDto.Login);
-
-            if (user is null)
-            {
-                throw new UserNotExistException();
-            }
+                .FirstOrDefaultAsync(user => user.UserName == assignRolesRequestDto.Login)
+                ?? throw new UserNotExistException();
 
             foreach (var role in assignRolesRequestDto.Roles)
             {
