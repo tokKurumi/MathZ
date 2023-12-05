@@ -18,6 +18,8 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\MathZ.GatewayAPI\MathZ.GatewayAPI.csproj" />
+        <ProjectReference Include="..\MathZ.Services.AdminAPI\MathZ.Services.AdminAPI.csproj" />
         <ProjectReference Include="..\MathZ.Services.AuthAPI\MathZ.Services.AuthAPI.csproj" />
     </ItemGroup>
 

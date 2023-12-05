@@ -69,12 +69,8 @@
             var roles = await _userManager.GetRolesAsync(user);
             var token = _jwtGeneratorService.GenerateToken(user, roles);
 
-            var userDto = _mapper.Map<UserAccountDto>(user);
-            userDto.Roles = roles;
-
             return new UserAccountLoginResponseDto()
             {
-                User = userDto,
                 Token = token,
             };
         }

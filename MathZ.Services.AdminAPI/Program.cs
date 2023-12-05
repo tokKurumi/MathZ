@@ -8,6 +8,7 @@ namespace MathZ.Services.AdminAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.AddServiceDefaults();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
@@ -23,6 +24,8 @@ namespace MathZ.Services.AdminAPI
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            app.MapDefaultEndpoints();
 
             if (app.Environment.IsDevelopment())
             {

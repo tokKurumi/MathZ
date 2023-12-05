@@ -31,6 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\MathZ.Services.ServiceDefaults\MathZ.Services.ServiceDefaults.csproj" />
         <ProjectReference Include="..\MathZ.Shared\MathZ.Shared.csproj" />
     </ItemGroup>
 

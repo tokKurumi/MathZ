@@ -1,14 +1,13 @@
 namespace MathZ.Services.AuthAPI
 {
-    using System.Text;
+    using System.ComponentModel;
+    using System.Reflection;
     using AutoMapper;
     using MathZ.Services.AuthAPI.Data;
     using MathZ.Services.AuthAPI.Services;
     using MathZ.Services.AuthAPI.Services.IServices;
     using MathZ.Shared.Models;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.IdentityModel.Tokens;
     using Microsoft.OpenApi.Models;
     using Swashbuckle.AspNetCore.Filters;
 
@@ -29,28 +28,6 @@ namespace MathZ.Services.AuthAPI
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            builder.Services
-                .AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(options =>
-                {
-                    options.SaveToken = true;
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidAudience = builder.Configuration["ApiSettings:JwtOptions:Audience"],
-                        ValidIssuer = builder.Configuration["ApiSettings:JwtOptions:Issuer"],
-                        ClockSkew = TimeSpan.Zero,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ApiSettings:JwtOptions:Secret"] ?? string.Empty)),
-                    };
-                });
-
             IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
             builder.Services.AddSingleton(mapper);
 
@@ -58,6 +35,8 @@ namespace MathZ.Services.AuthAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
+                options.CustomSchemaIds(x => x.GetCustomAttributes<DisplayNameAttribute>().SingleOrDefault()?.DisplayName ?? x.Name);
+
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
                 {
                     In = ParameterLocation.Header,

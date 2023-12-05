@@ -1,5 +1,8 @@
 ﻿namespace MathZ.Shared.Models.Dto
 {
+    using System.ComponentModel;
+
+    [DisplayName("RegistrationRequest")]
     public class UserAccountRegistrationRequestDto
     {
         public string Login { get; set; } = string.Empty;
