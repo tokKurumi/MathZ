@@ -16,16 +16,15 @@ namespace MathZ.Services.AuthAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.AddServiceDefaults();
 
             builder.Services
                 .AddScoped<IJwtGeneratorService, JwtGeneratorService>()
                 .AddScoped<IAuthService, AuthService>();
 
-            builder.AddNpgsqlDbContext<AppDbContext>("usersDb");
+            builder.AddNpgsqlDbContext<UsersDbContext>("usersDb");
 
             builder.Services.AddIdentity<UserAccount, IdentityRole>()
-                .AddEntityFrameworkStores<AppDbContext>()
+                .AddEntityFrameworkStores<UsersDbContext>()
                 .AddDefaultTokenProviders();
 
             IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
@@ -47,6 +46,8 @@ namespace MathZ.Services.AuthAPI
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
+
+            builder.AddServiceDefaults();
 
             var app = builder.Build();
 

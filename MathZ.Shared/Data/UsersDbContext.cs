@@ -1,16 +1,15 @@
-﻿namespace MathZ.Services.AdminAPI.Data
+﻿namespace MathZ.Services.AuthAPI.Data
 {
     using MathZ.Shared.Models;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class AppDbContext : DbContext
+    public class UsersDbContext : IdentityDbContext<UserAccount>
     {
-        public AppDbContext(DbContextOptions options)
+        public UsersDbContext(DbContextOptions options)
             : base(options)
         {
         }
-
-        public DbSet<UserAccount> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

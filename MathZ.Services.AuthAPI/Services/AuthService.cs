@@ -1,6 +1,7 @@
 ﻿namespace MathZ.Services.AuthAPI.Services
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Authentication;
     using AutoMapper;
     using MathZ.Services.AuthAPI.Data;
@@ -15,14 +16,14 @@
     public class AuthService : IAuthService
     {
         private readonly IMapper _mapper;
-        private readonly AppDbContext _dbContext;
+        private readonly UsersDbContext _dbContext;
         private readonly UserManager<UserAccount> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IJwtGeneratorService _jwtGeneratorService;
 
         public AuthService(
             IMapper mapper,
-            AppDbContext dbContext,
+            UsersDbContext dbContext,
             UserManager<UserAccount> userManager,
             RoleManager<IdentityRole> roleManager,
             IJwtGeneratorService jwtGeneratorService)

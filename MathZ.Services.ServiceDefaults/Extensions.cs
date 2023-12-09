@@ -4,6 +4,7 @@ namespace Microsoft.Extensions.Hosting
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
     using Microsoft.Extensions.Logging;
@@ -38,7 +39,7 @@ namespace Microsoft.Extensions.Hosting
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddJwtBearer("Bearer", options =>
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.SaveToken = true;
                     options.RequireHttpsMetadata = false;
@@ -46,10 +47,10 @@ namespace Microsoft.Extensions.Hosting
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
-                        ValidAudience = builder.Configuration["ApiSettings:JwtOptions:Audience"],
-                        ValidIssuer = builder.Configuration["ApiSettings:JwtOptions:Issuer"],
+                        ValidAudience = builder.Configuration.GetValue<string>("JwtOptions:Audience"),
+                        ValidIssuer = builder.Configuration.GetValue<string>("JwtOptions:Issuer"),
                         ClockSkew = TimeSpan.Zero,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ApiSettings:JwtOptions:Secret"] ?? string.Empty)),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("JwtOptions:Secret") ?? throw new Exception("Fill the Jwt secret."))),
                     };
                 });
 
