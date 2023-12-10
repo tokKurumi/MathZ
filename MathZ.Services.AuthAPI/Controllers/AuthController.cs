@@ -2,8 +2,8 @@
 {
     using System.Security.Authentication;
     using MathZ.Services.AuthAPI.Exceptions;
+    using MathZ.Services.AuthAPI.Models.Dto;
     using MathZ.Services.AuthAPI.Services.IServices;
-    using MathZ.Shared.Models.Dto;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 

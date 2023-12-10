@@ -1,4 +1,4 @@
-﻿namespace MathZ.Services.AuthAPI.Data
+﻿namespace MathZ.Shared.Data
 {
     using MathZ.Shared.Models;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

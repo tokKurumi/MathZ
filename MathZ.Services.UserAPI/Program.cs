@@ -1,8 +1,11 @@
-namespace MathZ.Services.AdminAPI
+namespace MathZ.Services.UserAPI
 {
     using System.ComponentModel;
     using System.Reflection;
+    using AutoMapper;
     using MathZ.Services.ServiceDefaults;
+    using MathZ.Services.UserAPI.Services;
+    using MathZ.Services.UserAPI.Services.IServices;
     using MathZ.Shared.Data;
     using MathZ.Shared.Models;
     using Microsoft.AspNetCore.Identity;
@@ -15,13 +18,18 @@ namespace MathZ.Services.AdminAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddScoped<IUserAccountService, UserAccountService>();
+
             builder.AddNpgsqlDbContext<UsersDbContext>("usersDb");
 
             builder.Services.AddIdentity<UserAccount, IdentityRole>()
                 .AddEntityFrameworkStores<UsersDbContext>()
                 .AddDefaultTokenProviders();
 
-            builder.Services.AddControllers();
+            IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
+            builder.Services.AddSingleton(mapper);
+
+            builder.Services.AddControllers().AddNewtonsoftJson();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
@@ -37,6 +45,8 @@ namespace MathZ.Services.AdminAPI
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
+
+            builder.Services.AddSwaggerGenNewtonsoftSupport();
 
             builder.AddServiceDefaults();
 

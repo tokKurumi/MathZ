@@ -4,10 +4,10 @@
     using System.Linq;
     using System.Security.Authentication;
     using AutoMapper;
-    using MathZ.Services.AuthAPI.Data;
     using MathZ.Services.AuthAPI.Exceptions;
     using MathZ.Services.AuthAPI.Models.Dto;
     using MathZ.Services.AuthAPI.Services.IServices;
+    using MathZ.Shared.Data;
     using MathZ.Shared.Models;
     using MathZ.Shared.Models.Dto;
     using Microsoft.AspNetCore.Identity;

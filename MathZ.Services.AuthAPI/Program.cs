@@ -3,9 +3,10 @@ namespace MathZ.Services.AuthAPI
     using System.ComponentModel;
     using System.Reflection;
     using AutoMapper;
-    using MathZ.Services.AuthAPI.Data;
     using MathZ.Services.AuthAPI.Services;
     using MathZ.Services.AuthAPI.Services.IServices;
+    using MathZ.Services.ServiceDefaults;
+    using MathZ.Shared.Data;
     using MathZ.Shared.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.OpenApi.Models;

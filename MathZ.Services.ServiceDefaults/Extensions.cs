@@ -1,4 +1,4 @@
-namespace Microsoft.Extensions.Hosting
+namespace MathZ.Services.ServiceDefaults
 {
     using System.Text;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,6 +7,7 @@ namespace Microsoft.Extensions.Hosting
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
     using OpenTelemetry.Logs;

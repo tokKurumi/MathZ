@@ -1,4 +1,4 @@
-﻿namespace MathZ.Shared.Models.Dto
+﻿namespace MathZ.Services.AuthAPI.Models.Dto
 {
     public class UserAccountLoginResponseDto
     {

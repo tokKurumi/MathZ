@@ -1,5 +1,6 @@
 namespace MathZ.GatewayAPI
 {
+    using MathZ.Services.ServiceDefaults;
     using Ocelot.DependencyInjection;
     using Ocelot.Middleware;
 

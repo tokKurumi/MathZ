@@ -20,4 +20,10 @@ var adminApi = builder.AddProject<Projects.MathZ_Services_AdminAPI>("mathz.servi
     .WithEnvironment("JwtOptions:Issuer", jwtIssuer)
     .WithEnvironment("JwtOptions:Secret", jwtSecret);
 
+var userApi = builder.AddProject<Projects.MathZ_Services_UserAPI>("mathz.services.userapi")
+    .WithReference(usersDb)
+    .WithEnvironment("JwtOptions:Audience", jwtAudience)
+    .WithEnvironment("JwtOptions:Issuer", jwtIssuer)
+    .WithEnvironment("JwtOptions:Secret", jwtSecret);
+
 builder.Build().Run();
