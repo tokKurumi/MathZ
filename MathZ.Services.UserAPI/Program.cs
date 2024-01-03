@@ -61,7 +61,7 @@ namespace MathZ.Services.UserAPI
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

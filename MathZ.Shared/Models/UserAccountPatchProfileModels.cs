@@ -1,4 +1,4 @@
-﻿namespace MathZ.Services.UserAPI.Models
+﻿namespace MathZ.Shared.Models
 {
     public class UserAccountPatchProfileModels
     {

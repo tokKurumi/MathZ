@@ -3,10 +3,10 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
     using MathZ.Services.UserAPI.Exceptions;
-    using MathZ.Services.UserAPI.Models;
     using MathZ.Services.UserAPI.Models.Dto;
     using MathZ.Services.UserAPI.Services.IServices;
     using MathZ.Shared.Exceptions;
+    using MathZ.Shared.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.JsonPatch;
     using Microsoft.AspNetCore.JsonPatch.Exceptions;
@@ -14,14 +14,10 @@
 
     [Authorize]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UserController(IUserAccountService userAccountService)
+        : ControllerBase
     {
-        private readonly IUserAccountService _userAccountService;
-
-        public UserController(IUserAccountService userAccountService)
-        {
-            _userAccountService = userAccountService;
-        }
+        private readonly IUserAccountService _userAccountService = userAccountService;
 
         [HttpGet]
         public async Task<IActionResult> GetProfileAsync()

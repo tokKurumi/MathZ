@@ -1,4 +1,4 @@
-﻿namespace MathZ.Services.AuthAPI.Models.Dto
+﻿namespace MathZ.Shared.Models.Dto
 {
     using System.ComponentModel;
 

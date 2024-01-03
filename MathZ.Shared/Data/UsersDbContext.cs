@@ -4,13 +4,9 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class UsersDbContext : IdentityDbContext<UserAccount>
+    public class UsersDbContext(DbContextOptions options)
+        : IdentityDbContext<UserAccount>(options)
     {
-        public UsersDbContext(DbContextOptions options)
-            : base(options)
-        {
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

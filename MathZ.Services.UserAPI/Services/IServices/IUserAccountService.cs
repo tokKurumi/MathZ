@@ -1,7 +1,7 @@
 ﻿namespace MathZ.Services.UserAPI.Services.IServices
 {
-    using MathZ.Services.UserAPI.Models;
     using MathZ.Services.UserAPI.Models.Dto;
+    using MathZ.Shared.Models;
     using MathZ.Shared.Models.Dto;
     using Microsoft.AspNetCore.JsonPatch;
 

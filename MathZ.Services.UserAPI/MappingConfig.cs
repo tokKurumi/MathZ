@@ -1,7 +1,6 @@
 ﻿namespace MathZ.Services.UserAPI
 {
     using AutoMapper;
-    using MathZ.Services.UserAPI.Models;
     using MathZ.Shared.Models;
     using MathZ.Shared.Models.Dto;
 

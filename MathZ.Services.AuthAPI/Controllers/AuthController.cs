@@ -1,21 +1,18 @@
 ﻿namespace MathZ.Services.AuthAPI.Controllers
 {
     using System.Security.Authentication;
-    using MathZ.Services.AuthAPI.Exceptions;
     using MathZ.Services.AuthAPI.Models.Dto;
     using MathZ.Services.AuthAPI.Services.IServices;
+    using MathZ.Shared.Exceptions;
+    using MathZ.Shared.Models.Dto;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class AuthController(IAuthService authService)
+        : ControllerBase
     {
-        private readonly IAuthService _authService;
-
-        public AuthController(IAuthService authService)
-        {
-            _authService = authService;
-        }
+        private readonly IAuthService _authService = authService;
 
         [HttpPost("Register")]
         [Authorize(Roles = "admin")]

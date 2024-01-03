@@ -1,62 +1,75 @@
-namespace MathZ.Services.AdminAPI
+namespace MathZ.Services.AdminAPI;
+
+using System.ComponentModel;
+using System.Reflection;
+using AutoMapper;
+using MathZ.Services.AdminAPI.Services;
+using MathZ.Services.AdminAPI.Services.IServices;
+using MathZ.Services.ServiceDefaults;
+using MathZ.Shared.Data;
+using MathZ.Shared.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+
+public class Program
 {
-    using System.ComponentModel;
-    using System.Reflection;
-    using MathZ.Services.ServiceDefaults;
-    using MathZ.Shared.Data;
-    using MathZ.Shared.Models;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.OpenApi.Models;
-    using Swashbuckle.AspNetCore.Filters;
-
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddScoped<IAdminService, AdminService>();
+
+        builder.Services.AddHttpClient<IAdminService, AdminService>(client =>
         {
-            var builder = WebApplication.CreateBuilder(args);
+            client.BaseAddress = new Uri(@"http://mathz.services.authapi");
+        });
 
-            builder.AddNpgsqlDbContext<UsersDbContext>("usersDb");
+        builder.AddNpgsqlDbContext<UsersDbContext>("usersDb");
 
-            builder.Services.AddIdentity<UserAccount, IdentityRole>()
-                .AddEntityFrameworkStores<UsersDbContext>()
-                .AddDefaultTokenProviders();
+        builder.Services.AddIdentity<UserAccount, IdentityRole>()
+            .AddEntityFrameworkStores<UsersDbContext>()
+            .AddDefaultTokenProviders();
 
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(options =>
+        IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
+        builder.Services.AddSingleton(mapper);
+
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.CustomSchemaIds(x => x.GetCustomAttributes<DisplayNameAttribute>().SingleOrDefault()?.DisplayName ?? x.Name);
+
+            options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
             {
-                options.CustomSchemaIds(x => x.GetCustomAttributes<DisplayNameAttribute>().SingleOrDefault()?.DisplayName ?? x.Name);
-
-                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
-                {
-                    In = ParameterLocation.Header,
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
-                });
-
-                options.OperationFilter<SecurityRequirementsOperationFilter>();
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
             });
 
-            builder.AddServiceDefaults();
+            options.OperationFilter<SecurityRequirementsOperationFilter>();
+        });
 
-            var app = builder.Build();
+        builder.AddServiceDefaults();
 
-            app.MapDefaultEndpoints();
+        var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+        app.MapDefaultEndpoints();
 
-            app.UseHttpsRedirection();
+        app.UseSwagger();
+        app.UseSwaggerUI(config =>
+        {
+            config.EnablePersistAuthorization();
+        });
 
-            app.UseAuthorization();
+        app.UseHttpsRedirection();
 
-            app.MapControllers();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
-            app.Run();
-        }
+        app.MapControllers();
+
+        app.Run();
     }
 }

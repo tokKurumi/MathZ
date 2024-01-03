@@ -33,6 +33,8 @@ namespace MathZ.Services.ServiceDefaults
                 http.UseServiceDiscovery();
             });
 
+            builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
             builder.Services
                 .AddAuthentication(options =>
                 {

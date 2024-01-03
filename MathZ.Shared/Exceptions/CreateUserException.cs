@@ -1,4 +1,4 @@
-﻿namespace MathZ.Services.AuthAPI.Exceptions
+﻿namespace MathZ.Shared.Exceptions
 {
     using Microsoft.AspNetCore.Identity;
 

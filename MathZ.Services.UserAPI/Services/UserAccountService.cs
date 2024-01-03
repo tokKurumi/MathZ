@@ -3,7 +3,6 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using MathZ.Services.UserAPI.Exceptions;
-    using MathZ.Services.UserAPI.Models;
     using MathZ.Services.UserAPI.Models.Dto;
     using MathZ.Services.UserAPI.Services.IServices;
     using MathZ.Shared.Exceptions;
@@ -12,18 +11,11 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.JsonPatch;
 
-    public class UserAccountService : IUserAccountService
+    public class UserAccountService(IMapper mapper, UserManager<UserAccount> userManager)
+        : IUserAccountService
     {
-        private readonly IMapper _mapper;
-        private readonly UserManager<UserAccount> _userManager;
-
-        public UserAccountService(
-            IMapper mapper,
-            UserManager<UserAccount> userManager)
-        {
-            _mapper = mapper;
-            _userManager = userManager;
-        }
+        private readonly IMapper _mapper = mapper;
+        private readonly UserManager<UserAccount> _userManager = userManager;
 
         public async Task<UserAccountDto> GetUserByIdAsync(string userId)
         {
