@@ -18,14 +18,15 @@ public class AdminController(IAdminService adminService)
 {
     private readonly IAdminService _adminService = adminService;
 
-    [HttpGet(@"Users")]
-    public async Task<IActionResult> GetUsersAsync()
-    {
-        var allUsers = await _adminService.GetAllUsersAsync();
-
-        return Ok(allUsers);
-    }
-
+    /// <summary>
+    /// Retrieves a user by their unique identifier.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <returns>
+    /// Returns an IActionResult.
+    /// If the user is found, it returns a result with a 200 (OK) status code and the user information.
+    /// If the user is not found, it returns a result with a 404 (Not Found) status code and error information.
+    /// </returns>
     [HttpGet(@"Users/{userId}")]
     public async Task<IActionResult> GetUserByIdAsync([FromRoute] string userId)
     {
@@ -41,14 +42,23 @@ public class AdminController(IAdminService adminService)
         }
     }
 
+    /// <summary>
+    /// Creates a new user.
+    /// </summary>
+    /// <param name="createUserModel">The model containing the registration information for the new user.</param>
+    /// <returns>
+    /// Returns an IActionResult.
+    /// If the user creation is successful, it returns a result with a 200 (OK) status code and the created user information.
+    /// If there is an error during user creation, it returns a result with a 400 (Bad Request) status code and error information.
+    /// </returns>
     [HttpPost(@"Users")]
-    public async Task<IActionResult> CreateUserAsync([FromBody] UserAccountRegistrationRequestDto model)
+    public async Task<IActionResult> CreateUserAsync([FromBody] UserAccountRegistrationRequestDto createUserModel)
     {
         var authorization = HttpContext.Request.Headers.Authorization.Last() ?? string.Empty;
 
         try
         {
-            var createdUser = await _adminService.RegisterUserAsync(authorization, model);
+            var createdUser = await _adminService.RegisterUserAsync(authorization, createUserModel);
             return Ok(createdUser);
         }
         catch (CreateUserException ex)
@@ -61,12 +71,24 @@ public class AdminController(IAdminService adminService)
         }
     }
 
+    /// <summary>
+    /// Updates a user's profile partially using a JSON patch document.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="patchUserRequest">The JSON patch document containing the changes to apply to the user profile.</param>
+    /// <returns>
+    /// Returns an IActionResult.
+    /// If the update is successful, it returns a result with a 200 (OK) status code and the updated user profile.
+    /// If the user is not found, it returns a result with a 404 (Not Found) status code and error information.
+    /// If the provided JSON patch document is invalid, it returns a result with a 400 (Bad Request) status code and error information.
+    /// If there is an error during the profile update, it returns a result with a 500 (Internal Server Error) status code and error details.
+    /// </returns>
     [HttpPatch(@"Users/{userId}")]
-    public async Task<IActionResult> PatchUserAsync([FromRoute] string userId, [FromBody] JsonPatchDocument<UserAccountPatchProfileModels> patchRequest)
+    public async Task<IActionResult> PatchUserAsync([FromRoute] string userId, [FromBody] JsonPatchDocument<UserAccountPatchProfileModels> patchUserRequest)
     {
         try
         {
-            var patchedUser = await _adminService.PatchProfileAsync(userId, patchRequest);
+            var patchedUser = await _adminService.PatchProfileAsync(userId, patchUserRequest);
 
             return Ok(patchedUser);
         }
@@ -84,12 +106,23 @@ public class AdminController(IAdminService adminService)
         }
     }
 
+    /// <summary>
+    /// Updates a user's password.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="changeUserPasswordRequest">The model containing the updated password information.</param>
+    /// <returns>
+    /// Returns an IActionResult.
+    /// If the password update is successful, it returns a result with a 200 (OK) status code.
+    /// If the user is not found, it returns a result with a 404 (Not Found) status code and error information.
+    /// If there is an error during the password update, it returns a result with a 400 (Bad Request) status code and error details.
+    /// </returns>
     [HttpPut("Users/{userId}/update-credentials")]
-    public async Task<IActionResult> UpdateUserPasswordAsync([FromRoute] string userId, [FromBody] UserAccountChangePasswordRequestDto changePasswordRequest)
+    public async Task<IActionResult> UpdateUserPasswordAsync([FromRoute] string userId, [FromBody] UserAccountChangePasswordRequestDto changeUserPasswordRequest)
     {
         try
         {
-            await _adminService.ChangeUserPasswordAsync(userId, changePasswordRequest.NewPassword);
+            await _adminService.ChangeUserPasswordAsync(userId, changeUserPasswordRequest.NewPassword);
 
             return Ok();
         }
@@ -103,6 +136,15 @@ public class AdminController(IAdminService adminService)
         }
     }
 
+    /// <summary>
+    /// Deletes a user.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <returns>
+    /// Returns an IActionResult.
+    /// If the user deletion is successful, it returns a result with a 200 (OK) status code.
+    /// If the user is not found, it returns a result with a 404 (Not Found) status code and error information.
+    /// </returns>
     [HttpDelete(@"Users/{userId}")]
     public async Task<IActionResult> DeleteUserAsync([FromRoute] string userId)
     {
@@ -118,6 +160,16 @@ public class AdminController(IAdminService adminService)
         }
     }
 
+    /// <summary>
+    /// Changes the roles of a user.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="roles">The roles to assign to the user.</param>
+    /// <returns>
+    /// Returns an IActionResult.
+    /// If the role change is successful, it returns a result with a 200 (OK) status code and the updated user information.
+    /// If the user is not found, it returns a result with a 404 (Not Found) status code and error information.
+    /// </returns>
     [HttpPost(@"Users/{userId}/Roles")]
     public async Task<IActionResult> ChangeUserRolesAsync([FromRoute] string userId, [FromBody] IEnumerable<string> roles)
     {
@@ -133,6 +185,16 @@ public class AdminController(IAdminService adminService)
         }
     }
 
+    /// <summary>
+    /// Deletes roles from a user.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="roles">The roles to remove from the user.</param>
+    /// <returns>
+    /// Returns an IActionResult.
+    /// If the role deletion is successful, it returns a result with a 200 (OK) status code and the updated user information.
+    /// If the user is not found, it returns a result with a 404 (Not Found) status code and error information.
+    /// </returns>
     [HttpDelete(@"Users/{userId}/Roles")]
     public async Task<IActionResult> DeleteUserRolesAsync([FromRoute] string userId, [FromBody] IEnumerable<string> roles)
     {
