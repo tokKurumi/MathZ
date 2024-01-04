@@ -34,7 +34,7 @@ public class Program
         IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
         builder.Services.AddSingleton(mapper);
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddNewtonsoftJson();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
@@ -50,6 +50,8 @@ public class Program
 
             options.OperationFilter<SecurityRequirementsOperationFilter>();
         });
+
+        builder.Services.AddSwaggerGenNewtonsoftSupport();
 
         builder.AddServiceDefaults();
 

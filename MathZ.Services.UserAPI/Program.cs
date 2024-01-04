@@ -33,6 +33,19 @@ namespace MathZ.Services.UserAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "UserAPI",
+                    Description = "An ASP.NET Core Web API for managing user account",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Yudashkin Oleg",
+                        Url = new Uri(@"https://github.com/tokKurumi"),
+                        Email = @"tokkurumi901@gmail.com",
+                    },
+                });
+
                 options.CustomSchemaIds(x => x.GetCustomAttributes<DisplayNameAttribute>().SingleOrDefault()?.DisplayName ?? x.Name);
 
                 options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
@@ -44,6 +57,9 @@ namespace MathZ.Services.UserAPI
                 });
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
+
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
             builder.Services.AddSwaggerGenNewtonsoftSupport();
@@ -54,11 +70,11 @@ namespace MathZ.Services.UserAPI
 
             app.MapDefaultEndpoints();
 
-            if (app.Environment.IsDevelopment())
+            app.UseSwagger();
+            app.UseSwaggerUI(config =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+                config.EnablePersistAuthorization();
+            });
 
             app.UseHttpsRedirection();
             app.UseAuthentication();

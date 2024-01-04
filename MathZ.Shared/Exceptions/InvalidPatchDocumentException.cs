@@ -1,4 +1,4 @@
-﻿namespace MathZ.Services.UserAPI.Exceptions
+﻿namespace MathZ.Shared.Exceptions
 {
     public class InvalidPatchDocumentException : Exception
     {

@@ -18,6 +18,20 @@ public static class MappingConfig
                     FirstName = converter.FirstName,
                     LastName = converter.LastName,
                 });
+
+            config.CreateMap<UserAccount, UserAccountPatchProfileModels>()
+                    .ConstructUsing(converter => new UserAccountPatchProfileModels()
+                    {
+                        FirstName = converter.FirstName,
+                        LastName = converter.LastName,
+                    });
+
+            config.CreateMap<UserAccountPatchProfileModels, UserAccount>()
+                .ConstructUsing(converter => new UserAccount()
+                {
+                    FirstName = converter.FirstName,
+                    LastName = converter.LastName,
+                });
         });
     }
 }

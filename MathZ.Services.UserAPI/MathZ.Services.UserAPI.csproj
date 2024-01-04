@@ -8,6 +8,7 @@
         <UserSecretsId>7260befc-fe32-4ffa-a119-e8c2a4f5cc3e</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <CodeAnalysisRuleSet>../common.ruleset</CodeAnalysisRuleSet>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>

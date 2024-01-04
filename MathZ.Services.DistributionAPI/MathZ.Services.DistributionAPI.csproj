@@ -8,6 +8,7 @@
         <UserSecretsId>8a8505a9-059c-4131-a359-ccf41525cdd7</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <CodeAnalysisRuleSet>../common.ruleset</CodeAnalysisRuleSet>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -34,6 +35,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\MathZ.Services.AuthAPI\MathZ.Services.AuthAPI.csproj" />
       <ProjectReference Include="..\MathZ.Shared\MathZ.Shared.csproj" />
     </ItemGroup>
 

@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
     using AutoMapper;
-    using MathZ.Services.UserAPI.Exceptions;
     using MathZ.Services.UserAPI.Models.Dto;
     using MathZ.Services.UserAPI.Services.IServices;
     using MathZ.Shared.Exceptions;

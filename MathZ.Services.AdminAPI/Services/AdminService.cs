@@ -25,10 +25,9 @@ public class AdminService(
     private readonly RoleManager<IdentityRole> _roleManager = roleManager;
     private readonly HttpClient _httpClient = httpClient;
 
-    public async Task<UserAccountDto> AssignUserRoles(string userId, IEnumerable<string> roles)
+    public async Task<UserAccountDto> AddUserRolesAsync(string userId, IEnumerable<string> roles)
     {
-        var user = await _userManager.Users
-            .FirstOrDefaultAsync(user => user.Id == userId)
+        var user = await _userManager.FindByIdAsync(userId)
             ?? throw new UserNotExistException();
 
         foreach (var role in roles)
@@ -44,11 +43,20 @@ public class AdminService(
 
         await _userManager.AddToRolesAsync(user, rolesToAdd);
 
-        return _mapper.Map<UserAccountDto>(await _userManager.Users
-            .FirstAsync(user => user.Id == userId));
+        return await GetUserByIdAsync(userId);
     }
 
-    public async Task DeleteUser(string userId)
+    public async Task<UserAccountDto> DeleteUserRolesAsync(string userId, IEnumerable<string> roles)
+    {
+        var user = await _userManager.FindByIdAsync(userId)
+            ?? throw new UserNotExistException();
+
+        await _userManager.RemoveFromRolesAsync(user, roles);
+
+        return await GetUserByIdAsync(userId);
+    }
+
+    public async Task DeleteUserAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId)
             ?? throw new UserNotExistException();
@@ -56,7 +64,7 @@ public class AdminService(
         await _userManager.DeleteAsync(user);
     }
 
-    public async Task<IEnumerable<UserAccountDto>> GetAllUsers()
+    public async Task<IEnumerable<UserAccountDto>> GetAllUsersAsync()
     {
         var users = await _dbContext.Users
             .Select(userAccount => new UserAccountDto
@@ -86,12 +94,36 @@ public class AdminService(
         return userResponse;
     }
 
-    public Task<UserAccountDto> PatchProfileAsync(string userId, JsonPatchDocument<UserAccountPatchProfileModels> patchRequest)
+    public async Task<UserAccountDto> PatchProfileAsync(string userId, JsonPatchDocument<UserAccountPatchProfileModels> patchRequest)
     {
-        throw new NotImplementedException();
+        var user = await _userManager.FindByIdAsync(userId)
+            ?? throw new UserNotExistException();
+
+        var existingProfile = _mapper.Map<UserAccountPatchProfileModels>(user);
+
+        if (patchRequest is null)
+        {
+            throw new InvalidPatchDocumentException();
+        }
+
+        patchRequest.ApplyTo(existingProfile);
+
+        _mapper.Map(existingProfile, user);
+
+        var updateResult = await _userManager.UpdateAsync(user);
+
+        if (!updateResult.Succeeded)
+        {
+            throw new UpdateProfileException()
+            {
+                Errors = updateResult.Errors,
+            };
+        }
+
+        return await GetUserByIdAsync(userId);
     }
 
-    public async Task<UserAccountDto> RegisterUser(string authorizationToken, UserAccountRegistrationRequestDto registrationRequestDto)
+    public async Task<UserAccountDto> RegisterUserAsync(string authorizationToken, UserAccountRegistrationRequestDto registrationRequestDto)
     {
         _httpClient.DefaultRequestHeaders.Add("Authorization", authorizationToken);
 
@@ -107,5 +139,23 @@ public class AdminService(
 
         return JsonConvert.DeserializeObject<UserAccountDto>(await response.Content.ReadAsStringAsync())
             ?? throw new JsonSerializationException($"Failed to deserialize server response.");
+    }
+
+    public async Task ChangeUserPasswordAsync(string userId, string newPassword)
+    {
+        var user = await _userManager.FindByIdAsync(userId)
+            ?? throw new UserNotExistException();
+
+        var resetPassToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        var result = await _userManager.ResetPasswordAsync(user, resetPassToken, newPassword);
+
+        if (!result.Succeeded)
+        {
+            throw new UpdateProfileException()
+            {
+                Errors = result.Errors,
+            };
+        }
     }
 }
