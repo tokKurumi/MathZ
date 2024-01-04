@@ -38,6 +38,19 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Version = "v1",
+                Title = "AdminAPI",
+                Description = "An ASP.NET Core Web API for managing user accounts as an administrator",
+                Contact = new OpenApiContact
+                {
+                    Name = "Yudashkin Oleg",
+                    Url = new Uri(@"https://github.com/tokKurumi"),
+                    Email = @"tokkurumi901@gmail.com",
+                },
+            });
+
             options.CustomSchemaIds(x => x.GetCustomAttributes<DisplayNameAttribute>().SingleOrDefault()?.DisplayName ?? x.Name);
 
             options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
