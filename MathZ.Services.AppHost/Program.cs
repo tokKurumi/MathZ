@@ -14,6 +14,11 @@ public class Program
             .WithVolumeMount("mathz.databases.users", "/var/lib/postgresql/data/", VolumeMountType.Named)
             .AddDatabase("usersDb");
 
+        var distributionAPI = builder.AddProject<Projects.MathZ_Services_DistributionAPI>("mathz.services.distributionapi")
+            .WithEnvironment("JwtOptions:Audience", jwtAudience)
+            .WithEnvironment("JwtOptions:Issuer", jwtIssuer)
+            .WithEnvironment("JwtOptions:Secret", jwtSecret);
+
         var authApi = builder.AddProject<Projects.MathZ_Services_AuthAPI>("mathz.services.authapi")
             .WithReference(usersDb)
             .WithEnvironment("JwtOptions:Audience", jwtAudience)

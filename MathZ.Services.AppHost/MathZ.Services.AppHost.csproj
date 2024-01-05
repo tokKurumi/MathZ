@@ -21,6 +21,7 @@
         <ProjectReference Include="..\MathZ.GatewayAPI\MathZ.GatewayAPI.csproj" />
         <ProjectReference Include="..\MathZ.Services.AdminAPI\MathZ.Services.AdminAPI.csproj" />
         <ProjectReference Include="..\MathZ.Services.AuthAPI\MathZ.Services.AuthAPI.csproj" />
+        <ProjectReference Include="..\MathZ.Services.DistributionAPI\MathZ.Services.DistributionAPI.csproj" />
         <ProjectReference Include="..\MathZ.Services.UserAPI\MathZ.Services.UserAPI.csproj" />
     </ItemGroup>
 

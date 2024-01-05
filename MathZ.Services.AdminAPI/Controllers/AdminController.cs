@@ -24,7 +24,7 @@ public class AdminController(IAdminService adminService)
     /// <returns>
     /// Returns an IActionResult with a 200 (OK) status code and a list of all users.
     /// </returns>
-    [HttpGet(@"Users")]
+    [HttpGet(@"users")]
     public async Task<IActionResult> GetUsersAsync()
     {
         // Retrieves a list of all users
@@ -43,7 +43,7 @@ public class AdminController(IAdminService adminService)
     /// If the user is found, it returns a result with a 200 (OK) status code and the user information.
     /// If the user is not found, it returns a result with a 404 (Not Found) status code and error information.
     /// </returns>
-    [HttpGet(@"Users/{userId}")]
+    [HttpGet(@"users/{userId}")]
     public async Task<IActionResult> GetUserByIdAsync([FromRoute] string userId)
     {
         try
@@ -67,7 +67,7 @@ public class AdminController(IAdminService adminService)
     /// If the user creation is successful, it returns a result with a 200 (OK) status code and the created user information.
     /// If there is an error during user creation, it returns a result with a 400 (Bad Request) status code and error information.
     /// </returns>
-    [HttpPost(@"Users")]
+    [HttpPost(@"users")]
     public async Task<IActionResult> CreateUserAsync([FromBody] UserAccountRegistrationRequestDto createUserModel)
     {
         var authorization = HttpContext.Request.Headers.Authorization.Last() ?? string.Empty;
@@ -99,7 +99,7 @@ public class AdminController(IAdminService adminService)
     /// If the provided JSON patch document is invalid, it returns a result with a 400 (Bad Request) status code and error information.
     /// If there is an error during the profile update, it returns a result with a 500 (Internal Server Error) status code and error details.
     /// </returns>
-    [HttpPatch(@"Users/{userId}")]
+    [HttpPatch(@"users/{userId}")]
     public async Task<IActionResult> PatchUserAsync([FromRoute] string userId, [FromBody] JsonPatchDocument<UserAccountPatchProfileModels> patchUserRequest)
     {
         try
@@ -133,7 +133,7 @@ public class AdminController(IAdminService adminService)
     /// If the user is not found, it returns a result with a 404 (Not Found) status code and error information.
     /// If there is an error during the password update, it returns a result with a 400 (Bad Request) status code and error details.
     /// </returns>
-    [HttpPut("Users/{userId}/update-credentials")]
+    [HttpPut("users/{userId}/update-credentials")]
     public async Task<IActionResult> UpdateUserPasswordAsync([FromRoute] string userId, [FromBody] UserAccountChangePasswordRequestDto changeUserPasswordRequest)
     {
         try
@@ -161,7 +161,7 @@ public class AdminController(IAdminService adminService)
     /// If the user deletion is successful, it returns a result with a 200 (OK) status code.
     /// If the user is not found, it returns a result with a 404 (Not Found) status code and error information.
     /// </returns>
-    [HttpDelete(@"Users/{userId}")]
+    [HttpDelete(@"users/{userId}")]
     public async Task<IActionResult> DeleteUserAsync([FromRoute] string userId)
     {
         try
@@ -186,7 +186,7 @@ public class AdminController(IAdminService adminService)
     /// If the role change is successful, it returns a result with a 200 (OK) status code and the updated user information.
     /// If the user is not found, it returns a result with a 404 (Not Found) status code and error information.
     /// </returns>
-    [HttpPost(@"Users/{userId}/Roles")]
+    [HttpPost(@"users/{userId}/Roles")]
     public async Task<IActionResult> ChangeUserRolesAsync([FromRoute] string userId, [FromBody] IEnumerable<string> roles)
     {
         try
@@ -211,7 +211,7 @@ public class AdminController(IAdminService adminService)
     /// If the role deletion is successful, it returns a result with a 200 (OK) status code and the updated user information.
     /// If the user is not found, it returns a result with a 404 (Not Found) status code and error information.
     /// </returns>
-    [HttpDelete(@"Users/{userId}/Roles")]
+    [HttpDelete(@"users/{userId}/Roles")]
     public async Task<IActionResult> DeleteUserRolesAsync([FromRoute] string userId, [FromBody] IEnumerable<string> roles)
     {
         try

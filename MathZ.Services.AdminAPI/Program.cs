@@ -75,8 +75,6 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseStaticFiles();
-
         app.MapDefaultEndpoints();
 
         app.UseSwagger();

@@ -17,19 +17,19 @@
         /// <summary>
         /// Registers a new user.
         /// </summary>
-        /// <param name="registrateUserModel">The model containing the registration information for the new user.</param>
+        /// <param name="registrationUserModel">The model containing the registration information for the new user.</param>
         /// <returns>
         /// Returns an IActionResult.
         /// If the user registration is successful, it returns a result with a 200 (OK) status code and the registration result.
         /// If there is an error during user creation, it returns a result with a 400 (Bad Request) status code and error information.
         /// </returns>
-        [HttpPost("Register")]
+        [HttpPost("register")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Register([FromBody] UserAccountRegistrationRequestDto registrateUserModel)
+        public async Task<IActionResult> Register([FromBody] UserAccountRegistrationRequestDto registrationUserModel)
         {
             try
             {
-                var result = await _authService.Register(registrateUserModel);
+                var result = await _authService.Register(registrationUserModel);
 
                 return Ok(result);
             }
@@ -48,7 +48,7 @@
         /// If the login is successful, it returns a result with a 200 (OK) status code and the login result.
         /// If there is an authentication error, it returns a result with a 400 (Bad Request) status code and error information.
         /// </returns>
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserAccountLoginRequestDto loginUserModel)
         {
             try
