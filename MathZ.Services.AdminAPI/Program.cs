@@ -61,6 +61,8 @@ public class Program
                 Scheme = "Bearer",
             });
 
+            options.EnableAnnotations();
+
             options.OperationFilter<SecurityRequirementsOperationFilter>();
 
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -73,12 +75,15 @@ public class Program
 
         var app = builder.Build();
 
+        app.UseStaticFiles();
+
         app.MapDefaultEndpoints();
 
         app.UseSwagger();
         app.UseSwaggerUI(config =>
         {
             config.EnablePersistAuthorization();
+            config.DisplayRequestDuration();
         });
 
         app.UseHttpsRedirection();

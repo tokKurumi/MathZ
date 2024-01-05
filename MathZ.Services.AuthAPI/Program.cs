@@ -74,6 +74,7 @@ public class Program
         app.UseSwaggerUI(config =>
         {
             config.EnablePersistAuthorization();
+            config.DisplayRequestDuration();
         });
 
         app.UseHttpsRedirection();

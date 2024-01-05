@@ -19,6 +19,22 @@ public class AdminController(IAdminService adminService)
     private readonly IAdminService _adminService = adminService;
 
     /// <summary>
+    /// Retrieves a list of all users.
+    /// </summary>
+    /// <returns>
+    /// Returns an IActionResult with a 200 (OK) status code and a list of all users.
+    /// </returns>
+    [HttpGet(@"Users")]
+    public async Task<IActionResult> GetUsersAsync()
+    {
+        // Retrieves a list of all users
+        var allUsers = await _adminService.GetAllUsersAsync();
+
+        // Returns a result with the list of users
+        return Ok(allUsers);
+    }
+
+    /// <summary>
     /// Retrieves a user by their unique identifier.
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>

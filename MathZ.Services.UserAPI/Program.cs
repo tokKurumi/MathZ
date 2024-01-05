@@ -74,6 +74,7 @@ namespace MathZ.Services.UserAPI
             app.UseSwaggerUI(config =>
             {
                 config.EnablePersistAuthorization();
+                config.DisplayRequestDuration();
             });
 
             app.UseHttpsRedirection();
