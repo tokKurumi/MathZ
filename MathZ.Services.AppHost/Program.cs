@@ -27,6 +27,7 @@ var userApi = builder.AddProject<Projects.MathZ_Services_UserAPI>("mathz.service
     .WithEnvironment("JWT_SECRET", jwtSecret);
 
 var adminApi = builder.AddProject<Projects.MathZ_Services_AdminAPI>("mathz.services.adminapi")
+    .WithReference(authApi)
     .WithReference(usersDb)
     .WithEnvironment("JWT_AUDIENCE", jwtAudience)
     .WithEnvironment("JWT_ISSUER", jwtIssuer)
