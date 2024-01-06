@@ -44,16 +44,20 @@ namespace MathZ.Services.ServiceDefaults
                 })
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
+                    var audience = builder.Configuration.GetValue<string>("JWT_AUDIENCE");
+                    var issuer = builder.Configuration.GetValue<string>("JWT_ISSUER");
+                    var secret = builder.Configuration.GetValue<string>("JWT_SECRET");
+
                     options.SaveToken = true;
                     options.RequireHttpsMetadata = false;
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
-                        ValidAudience = builder.Configuration.GetValue<string>("JwtOptions:Audience"),
-                        ValidIssuer = builder.Configuration.GetValue<string>("JwtOptions:Issuer"),
+                        ValidAudience = audience,
+                        ValidIssuer = issuer,
                         ClockSkew = TimeSpan.Zero,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("JwtOptions:Secret") ?? throw new Exception("Fill the Jwt secret."))),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
                     };
                 });
 

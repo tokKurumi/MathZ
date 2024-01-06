@@ -20,14 +20,14 @@
         public string GenerateToken(UserAccount user, IEnumerable<string> roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["ApiSettings:JwtOptions:Secret"] ?? string.Empty);
+            var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWT_SECRET"));
 
             var claimList = BuildClaimList(user, roles);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Audience = _configuration["ApiSettings:JwtOptions:Audience"],
-                Issuer = _configuration["ApiSettings:JwtOptions:Issuer"],
+                Audience = _configuration.GetValue<string>("JWT_AUDIENCE"),
+                Issuer = _configuration.GetValue<string>("JWT_ISSUER"),
                 Subject = new ClaimsIdentity(claimList),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),

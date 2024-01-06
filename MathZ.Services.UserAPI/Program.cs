@@ -20,7 +20,7 @@ namespace MathZ.Services.UserAPI
 
             builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 
-            builder.AddNpgsqlDbContext<UsersDbContext>("usersDb");
+            builder.AddNpgsqlDbContext<UsersDbContext>("mathz.databases.users");
 
             builder.Services.AddIdentity<UserAccount, IdentityRole>()
                 .AddEntityFrameworkStores<UsersDbContext>()

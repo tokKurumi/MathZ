@@ -1,35 +1,35 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-string jwtAudience = @"mathz-client";
-string jwtIssuer = "mathz-auth-api";
-string jwtSecret = @"642477c9-7840-4563-b0a2-02c677eb2db0";
+var jwtOptions = builder.Configuration.GetSection("jwtOptions");
 
-var usersDb = builder.AddPostgresContainer("users")
-    .WithVolumeMount("mathz.databases.users", "/var/lib/postgresql/data/", VolumeMountType.Named)
-    .AddDatabase("usersDb");
+var jwtAudience = jwtOptions["Audience"] ?? "mathz.client";
+var jwtIssuer = jwtOptions["Issuer"] ?? "mathz.services.authapi";
+var jwtSecret = jwtOptions["Secret"] ?? Guid.NewGuid().ToString();
+
+var usersDb = builder.AddPostgresContainer("mathz.databases.users")
+    .WithVolumeMount("mathz.databases.users", "/var/lib/postgresql/data/", VolumeMountType.Named);
 
 var authApi = builder.AddProject<Projects.MathZ_Services_AuthAPI>("mathz.services.authapi")
     .WithReference(usersDb)
-    .WithEnvironment("JwtOptions:Audience", jwtAudience)
-    .WithEnvironment("JwtOptions:Issuer", jwtIssuer)
-    .WithEnvironment("JwtOptions:Secret", jwtSecret);
+    .WithEnvironment("JWT_AUDIENCE", jwtAudience)
+    .WithEnvironment("JWT_ISSUER", jwtIssuer)
+    .WithEnvironment("JWT_SECRET", jwtSecret);
 
 var distributionAPI = builder.AddProject<Projects.MathZ_Services_DistributionAPI>("mathz.services.distributionapi")
-    .WithEnvironment("JwtOptions:Audience", jwtAudience)
-    .WithEnvironment("JwtOptions:Issuer", jwtIssuer)
-    .WithEnvironment("JwtOptions:Secret", jwtSecret);
+    .WithEnvironment("JWT_AUDIENCE", jwtAudience)
+    .WithEnvironment("JWT_ISSUER", jwtIssuer)
+    .WithEnvironment("JWT_SECRET", jwtSecret);
 
 var userApi = builder.AddProject<Projects.MathZ_Services_UserAPI>("mathz.services.userapi")
     .WithReference(usersDb)
-    .WithEnvironment("JwtOptions:Audience", jwtAudience)
-    .WithEnvironment("JwtOptions:Issuer", jwtIssuer)
-    .WithEnvironment("JwtOptions:Secret", jwtSecret);
+    .WithEnvironment("JWT_AUDIENCE", jwtAudience)
+    .WithEnvironment("JWT_ISSUER", jwtIssuer)
+    .WithEnvironment("JWT_SECRET", jwtSecret);
 
 var adminApi = builder.AddProject<Projects.MathZ_Services_AdminAPI>("mathz.services.adminapi")
     .WithReference(usersDb)
-    .WithReference(authApi)
-    .WithEnvironment("JwtOptions:Audience", jwtAudience)
-    .WithEnvironment("JwtOptions:Issuer", jwtIssuer)
-    .WithEnvironment("JwtOptions:Secret", jwtSecret);
+    .WithEnvironment("JWT_AUDIENCE", jwtAudience)
+    .WithEnvironment("JWT_ISSUER", jwtIssuer)
+    .WithEnvironment("JWT_SECRET", jwtSecret);
 
 builder.Build().Run();
