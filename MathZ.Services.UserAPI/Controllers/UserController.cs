@@ -19,7 +19,7 @@
         private readonly IUserAccountService _userAccountService = userAccountService;
 
         /// <summary>
-        /// Retrieves the user profile asynchronously.
+        /// Retrieves the user profile.
         /// </summary>
         /// <returns>
         /// Returns an IActionResult.
