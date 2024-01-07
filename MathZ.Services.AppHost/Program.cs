@@ -20,6 +20,11 @@ var distributionAPI = builder.AddProject<Projects.MathZ_Services_DistributionAPI
     .WithEnvironment("JWT_ISSUER", jwtIssuer)
     .WithEnvironment("JWT_SECRET", jwtSecret);
 
+var statisticsAPI = builder.AddProject<Projects.MathZ_Services_StatisticsAPI>("mathz.services.statisticsapi")
+    .WithEnvironment("JWT_AUDIENCE", jwtAudience)
+    .WithEnvironment("JWT_ISSUER", jwtIssuer)
+    .WithEnvironment("JWT_SECRET", jwtSecret);
+
 var userApi = builder.AddProject<Projects.MathZ_Services_UserAPI>("mathz.services.userapi")
     .WithReference(usersDb)
     .WithEnvironment("JWT_AUDIENCE", jwtAudience)

@@ -1,11 +1,11 @@
-namespace MathZ.Services.DistributionAPI;
+namespace MathZ.Services.StatisticsAPI;
 
 using System.ComponentModel;
 using System.Reflection;
-using AutoMapper;
-using MathZ.Services.DistributionAPI.Services;
-using MathZ.Services.DistributionAPI.Services.IServices;
+using System.Text.Json.Serialization;
 using MathZ.Services.ServiceDefaults;
+using MathZ.Services.StatisticsAPI.Services;
+using MathZ.Services.StatisticsAPI.Services.IServices;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -15,22 +15,28 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddScoped<IDiscreteDistributionService, DiscreteDistributionService>();
-        builder.Services.AddScoped<IContinuousDistributionService, ContinuousDistributionService>();
-        builder.Services.AddScoped<IAnalysisService, AnalysisService>();
+        builder.Services.AddScoped<IAdvancedAnalysisService, AdvancedAnalysisService>();
+        builder.Services.AddScoped<IBasicAnalysisService, BasicAnalysisService>();
+        builder.Services.AddScoped<IEstimatorService, EstimatorService>();
+        builder.Services.AddScoped<IOthersAnalysisService, OthersAnalysisService>();
+        builder.Services.AddScoped<IPopulationAnalysisService, PopulationAnalysisService>();
+        builder.Services.AddScoped<IQuantileService, QuantileService>();
 
-        IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
-        builder.Services.AddSingleton(mapper);
+        builder.Services
+            .AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
-        builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo
             {
                 Version = "v1",
-                Title = "DistributionAPI",
-                Description = "An ASP.NET Core Web API for working with math distributions",
+                Title = "StatisticsAPI",
+                Description = "An ASP.NET Core Web API for working with math statistics",
                 Contact = new OpenApiContact
                 {
                     Name = "Yudashkin Oleg",

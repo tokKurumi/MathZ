@@ -28,6 +28,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathZ.GatewayAPI", "MathZ.G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathZ.Services.UserAPI", "MathZ.Services.UserAPI\MathZ.Services.UserAPI.csproj", "{E93986B6-A62A-4683-A713-2F6FBAFD91A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathZ.Services.StatisticsAPI", "MathZ.Services.StatisticsAPI\MathZ.Services.StatisticsAPI.csproj", "{B2C6B459-53E2-4713-84D6-B0FE0C3CECC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{E93986B6-A62A-4683-A713-2F6FBAFD91A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E93986B6-A62A-4683-A713-2F6FBAFD91A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E93986B6-A62A-4683-A713-2F6FBAFD91A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C6B459-53E2-4713-84D6-B0FE0C3CECC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C6B459-53E2-4713-84D6-B0FE0C3CECC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C6B459-53E2-4713-84D6-B0FE0C3CECC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C6B459-53E2-4713-84D6-B0FE0C3CECC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +84,7 @@ Global
 		{B2C11BC1-4BB0-4DB8-BF33-A0FE890F1D5B} = {C3496B1F-9294-4677-9EB4-F67B3FBCC676}
 		{745F34DD-FD12-4C22-83D6-296A39711288} = {98F8E7EA-5C85-4B30-A4F5-F8EE506FAB8B}
 		{E93986B6-A62A-4683-A713-2F6FBAFD91A6} = {C3496B1F-9294-4677-9EB4-F67B3FBCC676}
+		{B2C6B459-53E2-4713-84D6-B0FE0C3CECC0} = {C3496B1F-9294-4677-9EB4-F67B3FBCC676}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8C527EA9-F8F2-464F-BABD-61D11A212DF6}
