@@ -20,6 +20,6 @@ public class AnalysisController(
     [HttpPost]
     public IActionResult Analyze([FromBody] IEnumerable<double> samples)
     {
-        return Ok(analysisService.Analyze(samples));
+        return Ok(analysisService.Analyze(samples).Result);
     }
 }
