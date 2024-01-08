@@ -17,7 +17,6 @@ public class Program
 
         builder.Services.AddScoped<IDiscreteDistributionService, DiscreteDistributionService>();
         builder.Services.AddScoped<IContinuousDistributionService, ContinuousDistributionService>();
-        builder.Services.AddScoped<IAnalysisService, AnalysisService>();
 
         IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
         builder.Services.AddSingleton(mapper);
