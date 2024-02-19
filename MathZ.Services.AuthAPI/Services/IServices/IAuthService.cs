@@ -1,14 +1,12 @@
-﻿namespace MathZ.Services.AuthAPI.Services.IServices
+﻿namespace MathZ.Services.AuthAPI.Services.IServices;
+
+using MathZ.Services.AuthAPI.Models.Dto;
+using MathZ.Shared.Models.Dto;
+using Microsoft.AspNetCore.Identity;
+
+public interface IAuthService
 {
-    using MathZ.Services.AuthAPI.Models.Dto;
-    using MathZ.Shared.Models.Dto;
+    Task<IdentityResult?> RegisterAsync(UserAccountRegistrationRequestDto registrationRequestDto);
 
-    public interface IAuthService
-    {
-        Task<UserAccountDto> Register(UserAccountRegistrationRequestDto registrationRequestDto);
-
-        Task<UserAccountLoginResponseDto> Login(UserAccountLoginRequestDto loginRequestDto);
-
-        Task<IEnumerable<string>> AsignRoles(UserAccountAssignRolesRequestDto assignRolesRequestDto);
-    }
+    Task<UserAccountLoginResponseDto> LoginAsync(UserAccountLoginRequestDto loginRequestDto);
 }

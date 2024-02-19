@@ -14,7 +14,8 @@ public static class MappingConfig
                 .ConvertUsing(converter => new UserAccountDto
                 {
                     Id = converter.Id,
-                    Login = converter.UserName ?? string.Empty,
+                    Email = converter.Email ?? string.Empty,
+                    UserName = converter.UserName ?? string.Empty,
                     FirstName = converter.FirstName,
                     LastName = converter.LastName,
                 });

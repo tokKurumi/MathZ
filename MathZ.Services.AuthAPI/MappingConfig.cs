@@ -1,51 +1,47 @@
-﻿namespace MathZ.Services.AuthAPI
+﻿namespace MathZ.Services.AuthAPI;
+
+using AutoMapper;
+using MathZ.Shared.Models;
+using MathZ.Shared.Models.Dto;
+
+public static class MappingConfig
 {
-    using AutoMapper;
-    using MathZ.Services.AuthAPI.Models.Dto;
-    using MathZ.Shared.Models;
-    using MathZ.Shared.Models.Dto;
-
-    public static class MappingConfig
+    public static MapperConfiguration RegisterMaps()
     {
-        public static MapperConfiguration RegisterMaps()
+        return new MapperConfiguration(config =>
         {
-            return new MapperConfiguration(config =>
-            {
-                config.CreateMap<UserAccount, UserAccountDto>()
-                    .ConvertUsing(converter => new UserAccountDto()
-                    {
-                        Id = converter.Id,
-                        Login = converter.UserName ?? string.Empty,
-                        FirstName = converter.FirstName,
-                        LastName = converter.LastName,
-                    });
+            config.CreateMap<UserAccount, UserAccountDto>()
+                .ConvertUsing(converter => new UserAccountDto
+                {
+                    Id = converter.Id,
+                    Email = converter.Email ?? string.Empty,
+                    UserName = converter.UserName ?? string.Empty,
+                    FirstName = converter.FirstName,
+                    LastName = converter.LastName,
+                });
 
-                config.CreateMap<UserAccountDto, UserAccount>()
-                    .ConvertUsing(converter => new UserAccount()
-                    {
-                        Id = converter.Id,
-                        UserName = converter.Login,
-                        NormalizedUserName = converter.Login.ToUpper(),
-                        FirstName = converter.FirstName,
-                        LastName = converter.LastName,
-                    });
+            config.CreateMap<UserAccountDto, UserAccount>()
+                .ConvertUsing(converter => new UserAccount()
+                {
+                    Id = converter.Id,
+                    Email = converter.Email,
+                    NormalizedEmail = converter.Email.ToUpper(),
+                    UserName = converter.UserName,
+                    NormalizedUserName = converter.UserName.ToUpper(),
+                    FirstName = converter.FirstName,
+                    LastName = converter.LastName,
+                });
 
-                config.CreateMap<UserAccountRegistrationRequestDto, UserAccount>()
-                    .ConvertUsing(converter => new UserAccount()
-                    {
-                        UserName = converter.Login,
-                        NormalizedUserName = converter.Login.ToUpper(),
-                        FirstName = converter.FirstName,
-                        LastName = converter.LastName,
-                    });
-
-                config.CreateMap<UserAccountRegistrationRequestDto, UserAccountAssignRolesRequestDto>()
-                    .ConstructUsing(converter => new UserAccountAssignRolesRequestDto()
-                    {
-                        Login = converter.Login,
-                        Roles = converter.Roles,
-                    });
-            });
-        }
+            config.CreateMap<UserAccountRegistrationRequestDto, UserAccount>()
+                .ConvertUsing(converter => new UserAccount()
+                {
+                    Email = converter.Email,
+                    NormalizedEmail = converter.Email.ToUpper(),
+                    UserName = converter.UserName,
+                    NormalizedUserName = converter.UserName.ToUpper(),
+                    FirstName = converter.FirstName,
+                    LastName = converter.LastName,
+                });
+        });
     }
 }

@@ -1,18 +1,17 @@
-﻿namespace MathZ.Shared.Models.Dto
+﻿namespace MathZ.Shared.Models.Dto;
+
+using System.ComponentModel;
+
+[DisplayName("RegistrationRequest")]
+public class UserAccountRegistrationRequestDto
 {
-    using System.ComponentModel;
+    public string Email { get; set; } = string.Empty;
 
-    [DisplayName("RegistrationRequest")]
-    public class UserAccountRegistrationRequestDto
-    {
-        public string Login { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
 
-        public string Password { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 
-        public string FirstName { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
 
-        public string LastName { get; set; } = string.Empty;
-
-        public IEnumerable<string> Roles { get; set; } = Enumerable.Empty<string>();
-    }
+    public string LastName { get; set; } = string.Empty;
 }

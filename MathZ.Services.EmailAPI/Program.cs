@@ -1,14 +1,14 @@
-namespace MathZ.Services.AuthAPI;
+namespace MathZ.Services.EmailAPI;
 
 using System.ComponentModel;
 using System.Reflection;
 using AutoMapper;
-using MathZ.Services.AuthAPI.Services;
-using MathZ.Services.AuthAPI.Services.IServices;
+using MailKit.Net.Smtp;
+using MathZ.Services.EmailAPI.Services;
+using MathZ.Services.EmailAPI.Services.IServices;
 using MathZ.Services.ServiceDefaults;
-using MathZ.Shared.Data;
-using MathZ.Shared.Models;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -18,22 +18,29 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services
-            .AddScoped<IJwtGeneratorService, JwtGeneratorService>()
-            .AddScoped<IAuthService, AuthService>();
-
-        builder.AddNpgsqlDbContext<UsersDbContext>("mathz.databases.users");
-
-        builder.Services.AddIdentity<UserAccount, IdentityRole>(options =>
-        {
-            options.SignIn.RequireConfirmedEmail = true;
-        })
-        .AddEntityFrameworkStores<UsersDbContext>()
-        .AddDefaultTokenProviders();
-
         IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
         builder.Services.AddSingleton(mapper);
 
+        builder.Services.Configure<SmtpConfig>(config =>
+        {
+            config.From = builder.Configuration.GetValue<string>("SMTP_FROM") ?? string.Empty;
+            config.Host = builder.Configuration.GetValue<string>("SMTP_HOST") ?? string.Empty;
+            config.Port = builder.Configuration.GetValue<int>("FROM_PORT");
+            config.UserName = builder.Configuration.GetValue<string>("FROM_USERNAME") ?? string.Empty;
+            config.Password = builder.Configuration.GetValue<string>("FROM_PASSWORD") ?? string.Empty;
+        });
+        builder.Services.AddScoped(serviceProvider =>
+        {
+            var config = serviceProvider.GetRequiredService<IOptions<SmtpConfig>>().Value;
+
+            var smtp = new SmtpClient();
+            smtp.Connect(config.Host, config.Port, true);
+            smtp.Authenticate(config.UserName, config.Password);
+
+            return smtp;
+        });
+
+        builder.Services.AddScoped<IEmailService, EmailService>();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
@@ -41,8 +48,8 @@ public class Program
             options.SwaggerDoc("v1", new OpenApiInfo
             {
                 Version = "v1",
-                Title = "AuthAPI",
-                Description = "An ASP.NET Core Web API for managing user accounts authorization and registration",
+                Title = "EmailAPI",
+                Description = "An ASP.NET Core Web API for sending emails",
                 Contact = new OpenApiContact
                 {
                     Name = "Yudashkin Oleg",
