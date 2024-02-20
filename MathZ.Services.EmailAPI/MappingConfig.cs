@@ -22,7 +22,7 @@ public static class MappingConfig
                     msg.From.AddRange(x1.From.Select(address => new MailboxAddress(address.Name, address.Address)));
                     msg.To.AddRange(x1.To.Select(address => new MailboxAddress(address.Name, address.Address)));
                     msg.Subject = x1.Subject;
-                    msg.Body = new TextPart("plain")
+                    msg.Body = new TextPart(MimeKit.Text.TextFormat.Html)
                     {
                         Text = x1.Body,
                     };

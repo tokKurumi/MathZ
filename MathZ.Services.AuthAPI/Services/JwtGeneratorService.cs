@@ -1,54 +1,54 @@
-﻿namespace MathZ.Services.AuthAPI.Services
+﻿namespace MathZ.Services.AuthAPI.Services;
+
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using MathZ.Services.AuthAPI.Services.IServices;
+using MathZ.Shared.Models;
+using Microsoft.IdentityModel.Tokens;
+
+public class JwtGeneratorService : IJwtGeneratorService
 {
-    using System.Collections.Generic;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Security.Claims;
-    using System.Text;
-    using MathZ.Services.AuthAPI.Services.IServices;
-    using MathZ.Shared.Models;
-    using Microsoft.IdentityModel.Tokens;
+    private readonly IConfiguration _configuration;
 
-    public class JwtGeneratorService : IJwtGeneratorService
+    public JwtGeneratorService(IConfiguration configuration)
     {
-        private readonly IConfiguration _configuration;
+        _configuration = configuration;
+    }
 
-        public JwtGeneratorService(IConfiguration configuration)
+    public string GenerateToken(UserAccount user, IEnumerable<string> roles)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWT_SECRET"));
+
+        var claimList = BuildClaimList(user, roles);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
-            _configuration = configuration;
-        }
+            Audience = _configuration.GetValue<string>("JWT_AUDIENCE"),
+            Issuer = _configuration.GetValue<string>("JWT_ISSUER"),
+            Subject = new ClaimsIdentity(claimList),
+            Expires = DateTime.UtcNow.AddMinutes(30),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+        };
 
-        public string GenerateToken(UserAccount user, IEnumerable<string> roles)
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+
+        return tokenHandler.WriteToken(token);
+    }
+
+    private IEnumerable<Claim> BuildClaimList(UserAccount user, IEnumerable<string> roles)
+    {
+        var claimList = new List<Claim>
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWT_SECRET"));
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+            new Claim(JwtRegisteredClaimNames.Name, user.UserName ?? string.Empty),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+        };
 
-            var claimList = BuildClaimList(user, roles);
+        claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Audience = _configuration.GetValue<string>("JWT_AUDIENCE"),
-                Issuer = _configuration.GetValue<string>("JWT_ISSUER"),
-                Subject = new ClaimsIdentity(claimList),
-                Expires = DateTime.UtcNow.AddMinutes(30),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
-        }
-
-        private IEnumerable<Claim> BuildClaimList(UserAccount user, IEnumerable<string> roles)
-        {
-            var claimList = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-                new Claim(JwtRegisteredClaimNames.Name, user.UserName ?? string.Empty),
-            };
-
-            claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
-            return claimList;
-        }
+        return claimList;
     }
 }

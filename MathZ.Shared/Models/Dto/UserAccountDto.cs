@@ -13,4 +13,6 @@ public class UserAccountDto
     public string LastName { get; set; } = string.Empty;
 
     public IEnumerable<string> Roles { get; set; } = Enumerable.Empty<string>();
+
+    public bool Confirmed { get; set; }
 }

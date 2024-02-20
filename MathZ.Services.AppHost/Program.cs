@@ -19,14 +19,7 @@ var usersDb = builder.AddPostgresContainer("mathz.databases.users")
     .WithVolumeMount("mathz.databases.users", "/var/lib/postgresql/data/", VolumeMountType.Named);
 
 // Micro-services
-var userApi = builder.AddProject<Projects.MathZ_Services_UserAPI>("mathz.services.userapi")
-    .WithReference(usersDb)
-    .WithEnvironment("JWT_AUDIENCE", jwtAudience)
-    .WithEnvironment("JWT_ISSUER", jwtIssuer)
-    .WithEnvironment("JWT_SECRET", jwtSecret);
-
 var emailApi = builder.AddProject<Projects.MathZ_Services_EmailAPI>("mathz.services.emailapi")
-    .WithReference(userApi)
     .WithEnvironment("SMTP_FROM", smtpFrom)
     .WithEnvironment("SMTP_HOST", smtpHost)
     .WithEnvironment("FROM_PORT", smtpPort)
@@ -36,15 +29,22 @@ var emailApi = builder.AddProject<Projects.MathZ_Services_EmailAPI>("mathz.servi
     .WithEnvironment("JWT_ISSUER", jwtIssuer)
     .WithEnvironment("JWT_SECRET", jwtSecret);
 
-var authApi = builder.AddProject<Projects.MathZ_Services_AuthAPI>("mathz.services.authapi")
+var userApi = builder.AddProject<Projects.MathZ_Services_UserAPI>("mathz.services.userapi")
     .WithReference(usersDb)
     .WithEnvironment("JWT_AUDIENCE", jwtAudience)
     .WithEnvironment("JWT_ISSUER", jwtIssuer)
     .WithEnvironment("JWT_SECRET", jwtSecret);
 
-var adminApi = builder.AddProject<Projects.MathZ_Services_AdminAPI>("mathz.services.adminapi")
-    .WithReference(authApi)
+var authApi = builder.AddProject<Projects.MathZ_Services_AuthAPI>("mathz.services.authapi")
     .WithReference(usersDb)
+    .WithReference(emailApi)
+    .WithEnvironment("JWT_AUDIENCE", jwtAudience)
+    .WithEnvironment("JWT_ISSUER", jwtIssuer)
+    .WithEnvironment("JWT_SECRET", jwtSecret);
+
+var adminApi = builder.AddProject<Projects.MathZ_Services_AdminAPI>("mathz.services.adminapi")
+    .WithReference(usersDb)
+    .WithReference(authApi)
     .WithEnvironment("JWT_AUDIENCE", jwtAudience)
     .WithEnvironment("JWT_ISSUER", jwtIssuer)
     .WithEnvironment("JWT_SECRET", jwtSecret);

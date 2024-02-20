@@ -9,4 +9,6 @@ public interface IAuthService
     Task<IdentityResult?> RegisterAsync(UserAccountRegistrationRequestDto registrationRequestDto);
 
     Task<UserAccountLoginResponseDto> LoginAsync(UserAccountLoginRequestDto loginRequestDto);
+
+    Task<IdentityResult?> ConfirmEmailAsync(string email, string confirmCode);
 }

@@ -17,7 +17,6 @@ public class EmailService(
 
     public async Task SendMessageAsync(Email email)
     {
-        await smtp.SendAsync(_mapper.Map<MimeMessage>(email));
-        await smtp.DisconnectAsync(true);
+        await _smtp.SendAsync(_mapper.Map<MimeMessage>(email));
     }
 }

@@ -1,9 +1,11 @@
 ﻿namespace MathZ.Services.AuthAPI.Controllers;
 
 using System.Security.Authentication;
+using System.Security.Claims;
 using MathZ.Services.AuthAPI.Models.Dto;
 using MathZ.Services.AuthAPI.Services.IServices;
 using MathZ.Shared.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -25,6 +27,16 @@ public class AuthController(IAuthService authService)
     public async Task<IActionResult> Register([FromBody] UserAccountRegistrationRequestDto registrationUserModel)
     {
         var result = await _authService.RegisterAsync(registrationUserModel);
+
+        return result.Succeeded ? Ok() : BadRequest(result.Errors);
+    }
+
+    [HttpPost("confirm")]
+    [Authorize]
+    public async Task<IActionResult> ConfirmEmailAsync([FromBody] ConfirmEmailAccountRequest confirmEmailAccountRequest)
+    {
+        var email = HttpContext.User.FindFirst(ClaimTypes.Email)?.Value;
+        var result = await _authService.ConfirmEmailAsync(email, confirmEmailAccountRequest.Code);
 
         return result.Succeeded ? Ok() : BadRequest(result.Errors);
     }

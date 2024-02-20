@@ -31,6 +31,11 @@ public class Program
         .AddEntityFrameworkStores<UsersDbContext>()
         .AddDefaultTokenProviders();
 
+        builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
+        {
+            client.BaseAddress = new Uri(@"http://mathz.services.emailapi");
+        });
+
         IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
         builder.Services.AddSingleton(mapper);
 

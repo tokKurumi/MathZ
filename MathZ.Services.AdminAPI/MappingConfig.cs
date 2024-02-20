@@ -18,6 +18,7 @@ public static class MappingConfig
                     UserName = converter.UserName ?? string.Empty,
                     FirstName = converter.FirstName,
                     LastName = converter.LastName,
+                    Confirmed = converter.EmailConfirmed,
                 });
 
             config.CreateMap<UserAccount, UserAccountPatchProfileModels>()

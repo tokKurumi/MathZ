@@ -70,6 +70,7 @@ public class AdminService(
             .Select(userAccount => new UserAccountDto
             {
                 Id = userAccount.Id,
+                Email = userAccount.Email ?? string.Empty,
                 UserName = userAccount.UserName ?? string.Empty,
                 FirstName = userAccount.FirstName,
                 LastName = userAccount.LastName,
@@ -77,6 +78,7 @@ public class AdminService(
                     .Where(userRole => userRole.UserId == userAccount.Id)
                     .Join(_dbContext.Roles, userRole => userRole.RoleId, role => role.Id, (userRole, role) => role.Name ?? string.Empty)
                     .ToList(),
+                Confirmed = userAccount.EmailConfirmed,
             })
             .ToListAsync();
 
