@@ -1,6 +1,0 @@
-@MathZ.Services.DistributionAPI_HostAddress = http://localhost:5212
-
-GET {{MathZ.Services.DistributionAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
