@@ -41,7 +41,7 @@ public class MailingController(
         var mailings = await _mailingService.GetMailingsAsync((pagination.PageNumber - 1) * pagination.PageSize, pagination.PageSize, cancellationToken);
         var total = await _mailingService.GetMailingsCountAsync(cancellationToken);
 
-        return Ok(PaginationResponse<MailingDto>.Create(mailings, total, pagination.PageNumber));
+        return Ok(PaginationResponse<MailingDto>.Create(mailings, total, pagination));
     }
 
     [HttpGet("Topic/{topic}")]
@@ -59,7 +59,7 @@ public class MailingController(
         var emails = await _mailingService.GetMailingEmailsByIdAsync(id, (pagination.PageNumber - 1) * pagination.PageSize, pagination.PageSize, cancellationToken);
         var total = await _mailingService.GetMailingEmailsCountByIdAsync(id, cancellationToken);
 
-        return Ok(PaginationResponse<MailingEmailDto>.Create(emails, total, pagination.PageNumber));
+        return Ok(PaginationResponse<MailingEmailDto>.Create(emails, total, pagination));
     }
 
     [HttpPatch("{id}")]

@@ -39,12 +39,17 @@ public class UserRolesService(
         };
     }
 
-    public async Task<IEnumerable<string>> GetRolesAsync(int skip, int count, CancellationToken cancellationToken)
+    public async Task<IEnumerable<string>> GetRolesAsync(int skip, int count, CancellationToken cancellationToken = default)
     {
         return await _mapper.ProjectTo<string>(
             _roleManager.Roles
             .Skip(skip)
             .Take(count))
             .ToArrayAsync(cancellationToken);
+    }
+
+    public async Task<int> GetRolesCountAsync(CancellationToken cancellationToken = default)
+    {
+        return await _roleManager.Roles.CountAsync(cancellationToken);
     }
 }

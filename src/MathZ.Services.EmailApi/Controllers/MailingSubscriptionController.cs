@@ -47,7 +47,7 @@ public class MailingSubscriptionController(
         var mailings = await _subscriptionService.GetSubscribedMailingsByEmailAsync(email, (pagination.PageNumber - 1) * pagination.PageSize, pagination.PageSize, cancellationToken);
         var total = await _subscriptionService.GetSubscribedMailingsCountByEmailAsync(email, cancellationToken);
 
-        return Ok(PaginationResponse<MailingDto>.Create(mailings, total, pagination.PageNumber));
+        return Ok(PaginationResponse<MailingDto>.Create(mailings, total, pagination));
     }
 
     [HttpGet("Subscribers/{mailingId}")]
@@ -57,7 +57,7 @@ public class MailingSubscriptionController(
         var subs = await _subscriptionService.GetMailingSubscribersByIdAsync(mailingId, (pagination.PageNumber - 1) * pagination.PageSize, pagination.PageSize, cancellationToken);
         var total = await _subscriptionService.GetMailingSubscribersCountByIdAsync(mailingId, cancellationToken);
 
-        return Ok(PaginationResponse<string>.Create(subs, total, pagination.PageNumber));
+        return Ok(PaginationResponse<string>.Create(subs, total, pagination));
     }
 
     [HttpDelete("{mailingId}")]

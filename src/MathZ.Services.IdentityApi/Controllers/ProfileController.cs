@@ -5,6 +5,7 @@ using Asp.Versioning;
 using MathZ.Services.IdentityApi.Models;
 using MathZ.Services.IdentityApi.Models.Dtos;
 using MathZ.Services.IdentityApi.Services.IServices;
+using MathZ.Shared.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public class ProfileController(
 {
     private readonly IUserAccountService _userAccountService = userAccountService;
 
-    [HttpGet]
+    [HttpGet("Me")]
     [Authorize]
     public async Task<IActionResult> GetMyProfileAsync()
     {
@@ -33,7 +34,7 @@ public class ProfileController(
         return myProfileResult.IsSuccess ? Ok(myProfileResult.Value) : StatusCode(500, myProfileResult.Errors);
     }
 
-    [HttpGet("Id/{id}")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetUserProfileByIdAsync([FromRoute] string id)
     {
         var user = await _userAccountService.GetUserByIdAsync(id);
@@ -42,7 +43,7 @@ public class ProfileController(
     }
 
     [HttpGet("UserName/{userName}")]
-    public async Task<IActionResult> GetUserProfileByUserNameAsync([FromRoute] string userName)
+    public async Task<IActionResult> GetUserProfileByUserNameAsync(string userName)
     {
         var user = await _userAccountService.GetUserByUserNameAsync(userName);
 
@@ -50,23 +51,24 @@ public class ProfileController(
     }
 
     [HttpGet("Email/{email}")]
-    public async Task<IActionResult> GetUserProfileByEmailAsync([FromRoute] string email)
+    public async Task<IActionResult> GetUserProfileByEmailAsync(string email)
     {
         var user = await _userAccountService.GetUserByEmailAsync(email);
 
         return user.IsSuccess ? Ok(user.Value) : NotFound(user.Errors);
     }
 
-    [HttpGet("All")]
+    [HttpGet]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> GetUsersProfilesAsync([FromQuery] int skip, [FromQuery] int count, CancellationToken cancellation)
+    public async Task<IActionResult> GetUsersProfilesAsync([FromQuery] PaginationRequest pagination, CancellationToken cancellation)
     {
-        var users = await _userAccountService.GetUsersAsync(skip, count, cancellation);
+        var users = await _userAccountService.GetUsersAsync((pagination.PageNumber - 1) * pagination.PageSize, pagination.PageSize, cancellation);
+        var total = await _userAccountService.GetUsersCountAsync(cancellation);
 
-        return Ok(users);
+        return Ok(PaginationResponse<ResponseUserDto>.Create(users, total, pagination));
     }
 
-    [HttpPatch]
+    [HttpPatch("Me")]
     [Authorize]
     public async Task<IActionResult> PatchMyProfileAsync(JsonPatchDocument<UserPatchProfile> patchProfile)
     {
@@ -81,7 +83,7 @@ public class ProfileController(
         return patchResult.IsSuccess ? Ok(patchResult.Value) : StatusCode(500, patchResult.Errors);
     }
 
-    [HttpPatch("Id/{id}")]
+    [HttpPatch("{id}")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> PatchUserProfileByIdAsync([FromRoute] string id, [FromBody] JsonPatchDocument<UserPatchProfile> patchProfile)
     {
@@ -89,7 +91,7 @@ public class ProfileController(
         return patchResult.IsSuccess ? Ok(patchResult.Value) : StatusCode(500, patchResult.Errors);
     }
 
-    [HttpPut]
+    [HttpPut("Me/Password")]
     [Authorize]
     public async Task<IActionResult> UpdateMyProfilePasswordAsync([FromBody] UpdatePasswordRequestDto updatePasswordRequest)
     {
@@ -104,7 +106,7 @@ public class ProfileController(
         return updatePasswordResult.IsSuccess ? Ok() : StatusCode(500, updatePasswordResult.Errors);
     }
 
-    [HttpPut("Id/{id}")]
+    [HttpPut("{id}/Password")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> UpdateUserProfilePasswordAsync([FromRoute] string id, [FromBody] string newPassword)
     {
@@ -112,7 +114,7 @@ public class ProfileController(
         return updatePasswordResult.IsSuccess ? Ok() : StatusCode(500, updatePasswordResult.Errors);
     }
 
-    [HttpDelete]
+    [HttpDelete("Me")]
     [Authorize]
     public async Task<IActionResult> DeleteMyProfileAsync()
     {
@@ -127,7 +129,7 @@ public class ProfileController(
         return deleteProfileResult.IsSuccess ? Ok() : StatusCode(500, deleteProfileResult.Errors);
     }
 
-    [HttpDelete("Id/{id}")]
+    [HttpDelete("{id}")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> DeleteUserProfileByIdAsync([FromRoute] string id)
     {

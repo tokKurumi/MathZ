@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [ApiVersion(1.0)]
-[Route("v{version:apiVersion}/[controller]")]
 [Authorize(Roles = "admin")]
+[Route("v{version:apiVersion}/[controller]")]
 public class EmailController(
     IEmailSenderService emailSenderService,
     IMailingService mailingService)

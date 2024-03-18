@@ -49,6 +49,7 @@ builder.Services.AddSwaggerGenNewtonsoftSupport();
 builder.Services.AddScoped<IJwtGeneratorService, JwtGeneratorService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
+builder.Services.AddScoped<IUserRolesService, UserRolesService>();
 
 builder.AddServiceDefaults();
 

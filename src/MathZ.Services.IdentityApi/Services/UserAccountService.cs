@@ -105,6 +105,11 @@ public class UserAccountService(
             .ToArrayAsync(cancellationToken);
     }
 
+    public async Task<int> GetUsersCountAsync(CancellationToken cancellationToken = default)
+    {
+        return await _userManager.Users.CountAsync(cancellationToken);
+    }
+
     public async Task<IEnumerable<ResponseUserDto>> GetUsersInRoleAsync(string role, int skip, int count)
     {
         return _mapper.Map<IEnumerable<ResponseUserDto>>((await _userManager.GetUsersInRoleAsync(role))
