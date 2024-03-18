@@ -10,7 +10,7 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddNpgsqlDbContext<UserIdentityDbContext>(AspireConnections.IdentityDatabase);
+builder.AddNpgsqlDbContext<UserIdentityDbContext>(AspireConnections.Database.IdentityDatabase);
 builder.Services
     .AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<UserIdentityDbContext>()

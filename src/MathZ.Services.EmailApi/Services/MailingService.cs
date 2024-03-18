@@ -68,6 +68,16 @@ public class MailingService(
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IEnumerable<MailingEmailDto>> GetMailingEmailsByIdAsync(string id, int skip, int count, CancellationToken cancellationToken = default)
+    {
+        return await _mapper.ProjectTo<MailingEmailDto>(_mailingDbContext.Emails
+            .AsNoTracking()
+            .Where(e => e.MailingId == id)
+            .Skip(skip)
+            .Take(count))
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<Result> UpdateMailingByIdAsync(string id, JsonPatchDocument<MailingPatch> patch, CancellationToken cancellationToken = default)
     {
         var mailing = await _mailingDbContext.Mailings
@@ -106,79 +116,12 @@ public class MailingService(
         return Result.Ok();
     }
 
-    public async Task<Result> SubscribeMailingByTopicAsync(string email, string topic, CancellationToken cancellationToken = default)
-    {
-        var mailing = await _mailingDbContext.Mailings
-            .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.Topic == topic, cancellationToken);
-
-        if (mailing is null)
-        {
-            return Result.Fail("Could not find mailing with provided topic");
-        }
-
-        var subscription = new MailingSubscriber
-        {
-            Email = email,
-            MailingId = mailing.Id,
-        };
-
-        await _mailingDbContext.Subscribers.AddAsync(subscription, cancellationToken);
-        await _mailingDbContext.SaveChangesAsync(cancellationToken);
-
-        return Result.Ok();
-    }
-
-    public async Task<Result<IEnumerable<string>>> GetMailingTopicSubscribersAsync(string topic, int skip, int count, CancellationToken cancellationToken = default)
+    public async Task<Result<IEnumerable<string>>> SendEmailByIdAsync(string mailingId, string subject, string body, CancellationToken cancellationToken = default)
     {
         var mailing = await _mailingDbContext.Mailings
             .AsNoTracking()
             .Include(m => m.Subscribers)
-            .FirstOrDefaultAsync(m => m.Topic == topic, cancellationToken);
-
-        if (mailing is null)
-        {
-            return Result.Fail("Could not find mailing with provided topic");
-        }
-
-        return Result.Ok(mailing.Subscribers
-            .Skip(skip)
-            .Take(count)
-            .Select(ms => ms.Email));
-    }
-
-    public async Task<Result> UnsubscribeMailingByTopicAsync(string email, string topic, CancellationToken cancellationToken = default)
-    {
-        var mailing = await _mailingDbContext.Mailings
-            .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.Topic == topic, cancellationToken);
-
-        if (mailing is null)
-        {
-            return Result.Fail("Could not find mailing with provided topic");
-        }
-
-        var subscription = await _mailingDbContext.Subscribers
-            .AsNoTracking()
-            .FirstOrDefaultAsync(ms => ms.MailingId == mailing.Id && ms.Email == email, cancellationToken);
-
-        if (subscription is null)
-        {
-            return Result.Fail("Could not find subscription on this topic");
-        }
-
-        _mailingDbContext.Subscribers.Remove(subscription);
-        await _mailingDbContext.SaveChangesAsync(cancellationToken);
-
-        return Result.Ok();
-    }
-
-    public async Task<Result<IEnumerable<string>>> SendEmailToTopicAsync(string subject, string body, string topic, CancellationToken cancellationToken = default)
-    {
-        var mailing = await _mailingDbContext.Mailings
-            .AsNoTracking()
-            .Include(m => m.Subscribers)
-            .FirstOrDefaultAsync(m => m.Topic == topic, cancellationToken);
+            .FirstOrDefaultAsync(m => m.Id == mailingId, cancellationToken);
 
         if (mailing is null)
         {

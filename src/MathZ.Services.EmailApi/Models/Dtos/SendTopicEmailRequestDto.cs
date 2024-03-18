@@ -2,7 +2,7 @@
 
 using System.ComponentModel;
 
-[DisplayName("SendTopicEmail")]
-public record SendTopicEmailDto(
+[DisplayName("SendTopicEmailRequest")]
+public record SendTopicEmailRequestDto(
     string Subject,
     string Body);

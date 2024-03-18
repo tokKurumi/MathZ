@@ -23,26 +23,26 @@ var identityDatabasePassword = databasePasswords["Identity"];
 var emailDatabasePassword = databasePasswords["Email"];
 
 // Message bus
-var messageBus = builder.AddKafkaContainer(AspireConnections.MessageBus);
+var messageBus = builder.AddKafka(AspireConnections.MessageBuss.Kafka);
 
 // Identity
-var identityDatabase = builder.AddPostgresContainer(AspireConnections.IdentityDatabaseServer, password: identityDatabasePassword)
+var identityDatabase = builder.AddPostgres(AspireConnections.Database.IdentityDatabaseServer, password: identityDatabasePassword)
     .WithPgAdmin()
-    .WithVolumeMount(AspireConnections.IdentityDatabase, "/var/lib/postgresql/data", VolumeMountType.Named)
-    .AddDatabase(AspireConnections.IdentityDatabase);
+    .WithVolumeMount(AspireConnections.Database.IdentityDatabase, "/var/lib/postgresql/data")
+    .AddDatabase(AspireConnections.Database.IdentityDatabase);
 
-var identityApi = builder.AddProject<Projects.MathZ_Services_IdentityApi>(AspireConnections.IdentityApi)
+var identityApi = builder.AddProject<Projects.MathZ_Services_IdentityApi>(AspireConnections.Api.IdentityApi)
     .WithJwt(jwtSecret, jwtAudience, jwtIssuer)
     .WithReference(identityDatabase)
     .WithReference(messageBus);
 
 // Email
-var emailDatabase = builder.AddPostgresContainer(AspireConnections.EmailDatabaseServer, password: emailDatabasePassword)
+var emailDatabase = builder.AddPostgres(AspireConnections.Database.EmailDatabaseServer, password: emailDatabasePassword)
     .WithPgAdmin()
-    .WithVolumeMount(AspireConnections.EmailDatabase, "/var/lib/postgresql/data", VolumeMountType.Named)
-    .AddDatabase(AspireConnections.EmailDatabase);
+    .WithVolumeMount(AspireConnections.Database.EmailDatabase, "/var/lib/postgresql/data")
+    .AddDatabase(AspireConnections.Database.EmailDatabase);
 
-var emailEpi = builder.AddProject<Projects.MathZ_Services_EmailApi>("mathz.services.emailapi")
+var emailEpi = builder.AddProject<Projects.MathZ_Services_EmailApi>(AspireConnections.Api.EmailApi)
     .WithJwt(jwtSecret, jwtAudience, jwtIssuer)
     .WithSmtp(smtpFrom, smtpHost, smtpPort, smtpUserName, smtpPassword)
     .WithReference(emailDatabase)

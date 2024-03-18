@@ -9,7 +9,7 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddNpgsqlDbContext<MailingDbContext>(AspireConnections.EmailDatabase);
+builder.AddNpgsqlDbContext<MailingDbContext>(AspireConnections.Database.EmailDatabase);
 builder.Services.AddHostedService<DatabaseInitializerService>();
 
 builder.Services.AddAutoMapper(config =>

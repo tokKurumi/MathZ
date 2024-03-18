@@ -27,11 +27,11 @@ public class EmailController(
         return Ok();
     }
 
-    [HttpPost("Topic/{topic}")]
+    [HttpPost("{id}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> SendEmailToTopicAsync([FromRoute] string topic, [FromBody] SendTopicEmailDto email, CancellationToken cancellationToken)
+    public async Task<IActionResult> SendEmailToTopicAsync([FromRoute] string id, [FromBody] SendTopicEmailRequestDto email, CancellationToken cancellationToken)
     {
-        var emailsResult = await _mailingService.SendEmailToTopicAsync(email.Subject, email.Body, topic, cancellationToken);
+        var emailsResult = await _mailingService.SendEmailByIdAsync(id, email.Subject, email.Body, cancellationToken);
 
         if (!emailsResult.IsSuccess)
         {
