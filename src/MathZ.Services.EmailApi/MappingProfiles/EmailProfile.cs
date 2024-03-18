@@ -23,5 +23,12 @@ public class EmailProfile : Profile
         CreateMap<MailAddress, MailboxAddress>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
             .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address));
+
+        CreateMap<MailingEmail, MailingEmailDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.MailingId, opt => opt.MapFrom(src => src.MailingId))
+            .ForMember(dest => dest.Subject, opt => opt.MapFrom(src => src.Subject))
+            .ForMember(dest => dest.Body, opt => opt.MapFrom(src => src.Body))
+            .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created));
     }
 }

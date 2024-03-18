@@ -56,6 +56,7 @@ builder.Services.AddSingleton(serviceProvider =>
 });
 builder.Services.AddSingleton<IEmailSenderService, EmailSenderService>();
 builder.Services.AddScoped<IMailingService, MailingService>();
+builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 
 builder.AddServiceDefaults();
 

@@ -16,7 +16,15 @@ public interface ISubscriptionService
     /// <param name="count">The number of subscribers to retrieve.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the mailing subscribers.</returns>
-    Task<Result<IEnumerable<string>>> GetMailingSubscribersByIdAsync(string mailingId, int skip, int count, CancellationToken cancellationToken = default);
+    Task<IEnumerable<string>> GetMailingSubscribersByIdAsync(string mailingId, int skip, int count, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves the count of mailing subscribers by mailing ID.
+    /// </summary>
+    /// <param name="mailingId">The ID of the mailing.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the count of mailing subscribers.</returns>
+    Task<int> GetMailingSubscribersCountByIdAsync(string mailingId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves the subscribed mailings by email.
@@ -27,6 +35,14 @@ public interface ISubscriptionService
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the subscribed mailings.</returns>
     Task<IEnumerable<MailingDto>> GetSubscribedMailingsByEmailAsync(string email, int skip, int count, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves the count of subscribed mailings by email.
+    /// </summary>
+    /// <param name="email">The email address.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the count of subscribed mailings.</returns>
+    Task<int> GetSubscribedMailingsCountByEmailAsync(string email, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Subscribes to a mailing by mailing ID and email.

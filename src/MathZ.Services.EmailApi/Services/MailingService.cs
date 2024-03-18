@@ -29,8 +29,6 @@ public class MailingService(
 
         await _mailingDbContext.Mailings.AddAsync(mailing, cancellationToken);
         await _mailingDbContext.SaveChangesAsync(cancellationToken);
-
-        await Console.Out.WriteLineAsync(mailing.Id);
     }
 
     public async Task<Result<MailingDto>> GetMailingByIdAsync(string id, CancellationToken cancellationToken = default)
@@ -68,6 +66,13 @@ public class MailingService(
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<int> GetMailingsCountAsync(CancellationToken cancellationToken = default)
+    {
+        return await _mailingDbContext.Mailings
+            .AsNoTracking()
+            .CountAsync(cancellationToken);
+    }
+
     public async Task<IEnumerable<MailingEmailDto>> GetMailingEmailsByIdAsync(string id, int skip, int count, CancellationToken cancellationToken = default)
     {
         return await _mapper.ProjectTo<MailingEmailDto>(_mailingDbContext.Emails
@@ -76,6 +81,13 @@ public class MailingService(
             .Skip(skip)
             .Take(count))
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<int> GetMailingEmailsCountByIdAsync(string id, CancellationToken cancellationToken = default)
+    {
+        return await _mailingDbContext.Emails
+            .AsNoTracking()
+            .CountAsync(e => e.MailingId == id, cancellationToken);
     }
 
     public async Task<Result> UpdateMailingByIdAsync(string id, JsonPatchDocument<MailingPatch> patch, CancellationToken cancellationToken = default)

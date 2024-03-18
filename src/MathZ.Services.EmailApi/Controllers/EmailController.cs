@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 [ApiVersion(1.0)]
 [Route("v{version:apiVersion}/[controller]")]
+[Authorize(Roles = "admin")]
 public class EmailController(
     IEmailSenderService emailSenderService,
     IMailingService mailingService)
@@ -19,7 +20,6 @@ public class EmailController(
     private readonly IMailingService _mailingService = mailingService;
 
     [HttpPost]
-    [Authorize(Roles = "admin")]
     public async Task<IActionResult> SendEmailAsync([FromBody] SendEmailRequestDto email, CancellationToken cancellationToken)
     {
         await _emailSenderService.SendEmailAsync(email.To, email.Subject, email.Body, cancellationToken);
@@ -28,7 +28,6 @@ public class EmailController(
     }
 
     [HttpPost("{id}")]
-    [Authorize(Roles = "admin")]
     public async Task<IActionResult> SendEmailToTopicAsync([FromRoute] string id, [FromBody] SendTopicEmailRequestDto email, CancellationToken cancellationToken)
     {
         var emailsResult = await _mailingService.SendEmailByIdAsync(id, email.Subject, email.Body, cancellationToken);

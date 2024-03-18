@@ -2,6 +2,7 @@
 
 using Asp.Versioning;
 using MathZ.Services.EmailApi.Models;
+using MathZ.Services.EmailApi.Models.Dtos;
 using MathZ.Services.EmailApi.Services.IServices;
 using MathZ.Shared.Pagination;
 using Microsoft.AspNetCore.Authorization;
@@ -19,9 +20,9 @@ public class MailingController(
 
     [HttpPost]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> CreateMailingAsync([FromQuery] string topic, [FromQuery] string? description, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateMailingAsync([FromBody] CreateMailingRequestDto createMailingRequest, CancellationToken cancellationToken)
     {
-        await _mailingService.CreateMailingAsync(topic, description, cancellationToken);
+        await _mailingService.CreateMailingAsync(createMailingRequest.Topic, createMailingRequest.Description, cancellationToken);
 
         return Ok();
     }
@@ -35,27 +36,30 @@ public class MailingController(
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetMailingByTopicAsync([FromQuery] string topic, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetMailingsAsync([FromQuery] PaginationRequest pagination, CancellationToken cancellationToken)
+    {
+        var mailings = await _mailingService.GetMailingsAsync((pagination.PageNumber - 1) * pagination.PageSize, pagination.PageSize, cancellationToken);
+        var total = await _mailingService.GetMailingsCountAsync(cancellationToken);
+
+        return Ok(PaginationResponse<MailingDto>.Create(mailings, total, pagination.PageNumber));
+    }
+
+    [HttpGet("Topic/{topic}")]
+    public async Task<IActionResult> GetMailingByTopicAsync([FromRoute] string topic, CancellationToken cancellationToken)
     {
         var mailingResult = await _mailingService.GetMailingByTopicAsync(topic, cancellationToken);
 
         return mailingResult.IsSuccess ? Ok(mailingResult.Value) : StatusCode(500, mailingResult.Errors);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetMailingsAsync([FromQuery] PaginationRequest pagination, CancellationToken cancellationToken)
-    {
-        var mailings = await _mailingService.GetMailingsAsync(pagination.PageNumber - 1, pagination.PageSize, cancellationToken);
-
-        return Ok(mailings);
-    }
-
     [HttpGet("{id}/Emails")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetMailingEmailsByIdAsync([FromRoute] string id, [FromQuery] PaginationRequest pagination, CancellationToken cancellationToken)
     {
-        var emails = await _mailingService.GetMailingEmailsByIdAsync(id, pagination.PageNumber - 1, pagination.PageSize, cancellationToken);
+        var emails = await _mailingService.GetMailingEmailsByIdAsync(id, (pagination.PageNumber - 1) * pagination.PageSize, pagination.PageSize, cancellationToken);
+        var total = await _mailingService.GetMailingEmailsCountByIdAsync(id, cancellationToken);
 
-        return Ok(emails);
+        return Ok(PaginationResponse<MailingEmailDto>.Create(emails, total, pagination.PageNumber));
     }
 
     [HttpPatch("{id}")]
