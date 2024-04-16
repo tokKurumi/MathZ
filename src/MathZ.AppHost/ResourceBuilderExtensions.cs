@@ -1,7 +1,8 @@
 ﻿namespace MathZ.AppHost;
 
 using Aspire.Hosting.ApplicationModel;
-using MathZ.Shared;
+using MathZ.Shared.Jwt;
+using MathZ.Shared.Smtp;
 
 public static class ResourceBuilderExtensions
 {

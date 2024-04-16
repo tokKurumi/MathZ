@@ -7,6 +7,7 @@ using FluentResults;
 using MathZ.Services.IdentityApi.Models;
 using MathZ.Services.IdentityApi.Models.Dtos;
 using MathZ.Services.IdentityApi.Services.IServices;
+using MathZ.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;

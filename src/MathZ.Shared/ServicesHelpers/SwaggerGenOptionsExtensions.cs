@@ -1,7 +1,8 @@
-﻿namespace MathZ.Shared;
+﻿namespace MathZ.Shared.ServicesHelpers;
 
 using System.ComponentModel;
 using System.Reflection;
+using MathZ.Shared.Jwt;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;

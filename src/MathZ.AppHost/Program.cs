@@ -23,23 +23,28 @@ var identityDatabasePassword = databasePasswords["Identity"];
 var emailDatabasePassword = databasePasswords["Email"];
 
 // Message bus
-var messageBus = builder.AddKafka(AspireConnections.MessageBuss.Kafka);
+var messageBus = builder
+    .AddRabbitMQ(AspireConnections.MessageBuss.RabbitMQ)
+    .WithManagementPlugin();
 
 // Identity
-var identityDatabase = builder.AddPostgres(AspireConnections.Database.IdentityDatabaseServer, password: identityDatabasePassword)
+var identityDatabase = builder
+    .AddPostgres(AspireConnections.Database.IdentityDatabaseServer, password: builder.CreateStablePassword("identity-password"))
     .WithPgAdmin()
-    .WithVolumeMount(AspireConnections.Database.IdentityDatabase, "/var/lib/postgresql/data")
+    .WithDataVolume(AspireConnections.Database.IdentityDatabase)
     .AddDatabase(AspireConnections.Database.IdentityDatabase);
 
-var identityApi = builder.AddProject<Projects.MathZ_Services_IdentityApi>(AspireConnections.Api.IdentityApi)
+var identityApi = builder
+    .AddProject<Projects.MathZ_Services_IdentityApi>(AspireConnections.Api.IdentityApi)
     .WithJwt(jwtSecret, jwtAudience, jwtIssuer)
     .WithReference(identityDatabase)
     .WithReference(messageBus);
 
 // Email
-var emailDatabase = builder.AddPostgres(AspireConnections.Database.EmailDatabaseServer, password: emailDatabasePassword)
+var emailDatabase = builder
+    .AddPostgres(AspireConnections.Database.EmailDatabaseServer, password: builder.CreateStablePassword("email-password"))
     .WithPgAdmin()
-    .WithVolumeMount(AspireConnections.Database.EmailDatabase, "/var/lib/postgresql/data")
+    .WithDataVolume(AspireConnections.Database.EmailDatabase)
     .AddDatabase(AspireConnections.Database.EmailDatabase);
 
 var emailEpi = builder.AddProject<Projects.MathZ_Services_EmailApi>(AspireConnections.Api.EmailApi)

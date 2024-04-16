@@ -1,14 +1,28 @@
+using MassTransit;
 using MathZ.ServiceDefaults;
 using MathZ.Services.IdentityApi.Data;
 using MathZ.Services.IdentityApi.MappingProfiles;
-using MathZ.Services.IdentityApi.Models;
 using MathZ.Services.IdentityApi.Services;
 using MathZ.Services.IdentityApi.Services.IServices;
 using MathZ.Shared;
+using MathZ.Shared.Models;
+using MathZ.Shared.ServicesHelpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMassTransit(x =>
+{
+    x.SetKebabCaseEndpointNameFormatter();
+
+    x.UsingRabbitMq((context, config) =>
+    {
+        var connectionString = builder.Configuration.GetConnectionString(AspireConnections.MessageBuss.RabbitMQ);
+
+        config.Host(connectionString);
+    });
+});
 
 builder.AddNpgsqlDbContext<UserIdentityDbContext>(AspireConnections.Database.IdentityDatabase);
 builder.Services

@@ -1,4 +1,4 @@
-﻿namespace MathZ.Shared;
+﻿namespace MathZ.Shared.Jwt;
 
 public static class JwtBearerDefaults
 {

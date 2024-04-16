@@ -1,4 +1,4 @@
-﻿namespace MathZ.Shared;
+﻿namespace MathZ.Shared.ServicesHelpers;
 
 using Asp.Versioning;
 using Microsoft.Extensions.DependencyInjection;

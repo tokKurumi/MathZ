@@ -5,8 +5,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using MathZ.Services.IdentityApi.Models;
 using MathZ.Services.IdentityApi.Services.IServices;
+using MathZ.Shared.Jwt;
+using MathZ.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
@@ -20,9 +21,9 @@ public class JwtGeneratorService(
 
     public async Task<string> GenerateTokenAsync(User user)
     {
-        var audience = _configuration.GetValue<string>(Shared.JwtEnvConstants.JwtAudience);
-        var issuer = _configuration.GetValue<string>(Shared.JwtEnvConstants.JwtIssuer);
-        var secretKey = _configuration.GetValue<string>(Shared.JwtEnvConstants.JwtSecret)
+        var audience = _configuration.GetValue<string>(JwtEnvConstants.JwtAudience);
+        var issuer = _configuration.GetValue<string>(JwtEnvConstants.JwtIssuer);
+        var secretKey = _configuration.GetValue<string>(JwtEnvConstants.JwtSecret)
             ?? throw new InvalidOperationException("JWT secret key is null or empty.");
 
         var claims = await BuildClaimsAsync(user);

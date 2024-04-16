@@ -1,4 +1,4 @@
-﻿namespace MathZ.Shared;
+﻿namespace MathZ.Shared.Smtp;
 
 public static class SmtpEnvConstants
 {

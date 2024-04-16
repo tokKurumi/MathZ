@@ -2,20 +2,23 @@
 
 using AutoMapper;
 using FluentResults;
-using MathZ.Services.IdentityApi.Models;
+using MassTransit;
 using MathZ.Services.IdentityApi.Models.Dtos;
 using MathZ.Services.IdentityApi.Services.IServices;
+using MathZ.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 
 public class AuthService(
     IMapper mapper,
     UserManager<User> userManager,
-    IJwtGeneratorService jwtGeneratorService)
+    IJwtGeneratorService jwtGeneratorService,
+    IPublishEndpoint publishEndpoint)
     : IAuthService
 {
     private readonly IMapper _mapper = mapper;
     private readonly UserManager<User> _userManager = userManager;
     private readonly IJwtGeneratorService _jwtGeneratorService = jwtGeneratorService;
+    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
 
     public async Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequest)
     {
@@ -32,6 +35,8 @@ public class AuthService(
     {
         var userToCreate = _mapper.Map<User>(registrationRequest);
 
-        return await _userManager.CreateAsync(userToCreate, registrationRequest.Password);
+        var result = await _userManager.CreateAsync(userToCreate, registrationRequest.Password);
+
+        return result;
     }
 }

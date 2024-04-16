@@ -1,7 +1,7 @@
 ﻿namespace MathZ.Services.IdentityApi.Services.IServices;
 
 using System.Threading.Tasks;
-using MathZ.Services.IdentityApi.Models;
+using MathZ.Shared.Models;
 
 public interface IJwtGeneratorService
 {

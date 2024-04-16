@@ -18,6 +18,6 @@ public static class AspireConnections
 
     public static class MessageBuss
     {
-        public const string Kafka = "mathz-messagebus-kafka";
+        public const string RabbitMQ = "mathz-messagebus-rabbitmq";
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace MathZ.Services.IdentityApi.Data;
 
-using MathZ.Services.IdentityApi.Models;
+using MathZ.Shared.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

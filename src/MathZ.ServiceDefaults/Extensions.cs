@@ -1,5 +1,5 @@
 using System.Text;
-using MathZ.Shared;
+using MathZ.Shared.Jwt;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;

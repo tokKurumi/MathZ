@@ -1,13 +1,28 @@
 using MailKit.Net.Smtp;
+using MassTransit;
 using MathZ.ServiceDefaults;
 using MathZ.Services.EmailApi.Data;
 using MathZ.Services.EmailApi.MappingProfiles;
 using MathZ.Services.EmailApi.Services;
 using MathZ.Services.EmailApi.Services.IServices;
 using MathZ.Shared;
+using MathZ.Shared.ServicesHelpers;
+using MathZ.Shared.Smtp;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMassTransit(x =>
+{
+    x.SetKebabCaseEndpointNameFormatter();
+
+    x.UsingRabbitMq((context, config) =>
+    {
+        var connectionString = builder.Configuration.GetConnectionString(AspireConnections.MessageBuss.RabbitMQ);
+
+        config.Host(connectionString);
+    });
+});
 
 builder.AddNpgsqlDbContext<MailingDbContext>(AspireConnections.Database.EmailDatabase);
 builder.Services.AddHostedService<DatabaseInitializerService>();

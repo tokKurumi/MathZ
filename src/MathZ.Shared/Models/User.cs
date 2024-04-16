@@ -1,4 +1,4 @@
-﻿namespace MathZ.Services.IdentityApi.Models;
+﻿namespace MathZ.Shared.Models;
 
 using Microsoft.AspNetCore.Identity;
 

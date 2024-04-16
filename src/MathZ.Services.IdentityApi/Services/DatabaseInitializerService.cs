@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MathZ.Services.IdentityApi.Data;
 using MathZ.Services.IdentityApi.Models;
+using MathZ.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 

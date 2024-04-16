@@ -3,6 +3,7 @@
 using AutoMapper;
 using MathZ.Services.IdentityApi.Models;
 using MathZ.Services.IdentityApi.Models.Dtos;
+using MathZ.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 
 public class IdentityProfile : Profile

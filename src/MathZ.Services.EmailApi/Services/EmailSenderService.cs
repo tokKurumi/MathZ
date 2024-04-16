@@ -5,7 +5,7 @@ using AutoMapper;
 using MailKit.Net.Smtp;
 using MathZ.Services.EmailApi.Models;
 using MathZ.Services.EmailApi.Services.IServices;
-using MathZ.Shared;
+using MathZ.Shared.Smtp;
 using MimeKit;
 using MimeKit.Text;
 
