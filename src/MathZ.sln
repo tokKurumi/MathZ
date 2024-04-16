@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathZ.ServiceDefaults", "Ma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathZ.Services.EmailApi", "MathZ.Services.EmailApi\MathZ.Services.EmailApi.csproj", "{6B2D6F93-85A3-4844-BBE6-31A0EE70B1A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathZ.Services.ForumApi", "MathZ.Services.ForumApi\MathZ.Services.ForumApi.csproj", "{C22CD459-4384-403D-9BA1-AD06F9128BC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{6B2D6F93-85A3-4844-BBE6-31A0EE70B1A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B2D6F93-85A3-4844-BBE6-31A0EE70B1A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B2D6F93-85A3-4844-BBE6-31A0EE70B1A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C22CD459-4384-403D-9BA1-AD06F9128BC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C22CD459-4384-403D-9BA1-AD06F9128BC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C22CD459-4384-403D-9BA1-AD06F9128BC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C22CD459-4384-403D-9BA1-AD06F9128BC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{EC1B7FDE-CF97-4A76-BE01-513467F0F04B} = {7D1FEC86-1D55-49EB-82C4-7F6735D2A08F}
 		{6B2D6F93-85A3-4844-BBE6-31A0EE70B1A0} = {7D1FEC86-1D55-49EB-82C4-7F6735D2A08F}
+		{C22CD459-4384-403D-9BA1-AD06F9128BC1} = {7D1FEC86-1D55-49EB-82C4-7F6735D2A08F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B278D77F-1444-464B-AF3D-91E4D2979353}

@@ -1,0 +1,6 @@
+@MathZ.Services.ForumApi_HostAddress = http://localhost:5245
+
+GET {{MathZ.Services.ForumApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
