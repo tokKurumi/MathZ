@@ -30,7 +30,7 @@ var messageBus = builder
 
 // Identity
 var identityDatabase = builder
-    .AddPostgres(AspireConnections.Database.IdentityDatabaseServer, password: builder.CreateStablePassword("identity-password"))
+    .AddPostgres(AspireConnections.Database.IdentityDatabaseServer, password: builder.CreateStablePassword(identityDatabasePassword!))
     .WithPgAdmin()
     .WithDataVolume(AspireConnections.Database.IdentityDatabase)
     .AddDatabase(AspireConnections.Database.IdentityDatabase);
@@ -43,7 +43,7 @@ var identityApi = builder
 
 // Email
 var emailDatabase = builder
-    .AddPostgres(AspireConnections.Database.EmailDatabaseServer, password: builder.CreateStablePassword("email-password"))
+    .AddPostgres(AspireConnections.Database.EmailDatabaseServer, password: builder.CreateStablePassword(emailDatabasePassword!))
     .WithPgAdmin()
     .WithDataVolume(AspireConnections.Database.EmailDatabase)
     .AddDatabase(AspireConnections.Database.EmailDatabase);
@@ -56,7 +56,7 @@ var emailEpi = builder
     .WithReference(messageBus);
 
 var forumDatabase = builder
-    .AddPostgres(AspireConnections.Database.ForumDatabaseServer, password: builder.CreateStablePassword("forum-password"))
+    .AddPostgres(AspireConnections.Database.ForumDatabaseServer, password: builder.CreateStablePassword(forumDatabasePassword!))
     .WithPgAdmin()
     .WithDataVolume(AspireConnections.Database.ForumDatabase)
     .AddDatabase(AspireConnections.Database.ForumDatabase);
