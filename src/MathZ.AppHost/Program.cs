@@ -21,6 +21,7 @@ var smtpPassword = builder.Configuration["SMTP:Password"];
 var databasePasswords = builder.Configuration.GetSection("DatabasePasswords");
 var identityDatabasePassword = databasePasswords["Identity"];
 var emailDatabasePassword = databasePasswords["Email"];
+var forumDatabasePassword = databasePasswords["Forum"];
 
 // Message bus
 var messageBus = builder
@@ -47,10 +48,22 @@ var emailDatabase = builder
     .WithDataVolume(AspireConnections.Database.EmailDatabase)
     .AddDatabase(AspireConnections.Database.EmailDatabase);
 
-var emailEpi = builder.AddProject<Projects.MathZ_Services_EmailApi>(AspireConnections.Api.EmailApi)
+var emailEpi = builder
+    .AddProject<Projects.MathZ_Services_EmailApi>(AspireConnections.Api.EmailApi)
     .WithJwt(jwtSecret, jwtAudience, jwtIssuer)
     .WithSmtp(smtpFrom, smtpHost, smtpPort, smtpUserName, smtpPassword)
     .WithReference(emailDatabase)
     .WithReference(messageBus);
+
+var forumDatabase = builder
+    .AddPostgres(AspireConnections.Database.ForumDatabaseServer, password: builder.CreateStablePassword("forum-password"))
+    .WithPgAdmin()
+    .WithDataVolume(AspireConnections.Database.ForumDatabase)
+    .AddDatabase(AspireConnections.Database.ForumDatabase);
+
+var forumApi = builder
+    .AddProject<Projects.MathZ_Services_ForumApi>(AspireConnections.Api.ForumApi)
+    .WithJwt(jwtSecret, jwtAudience, jwtIssuer)
+    .WithReference(forumDatabase);
 
 await builder.Build().RunAsync();

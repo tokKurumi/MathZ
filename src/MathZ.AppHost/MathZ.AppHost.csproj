@@ -19,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MathZ.Services.EmailApi\MathZ.Services.EmailApi.csproj" />
+    <ProjectReference Include="..\MathZ.Services.ForumApi\MathZ.Services.ForumApi.csproj" />
     <ProjectReference Include="..\MathZ.Services.IdentityApi\MathZ.Services.IdentityApi.csproj" />
     <ProjectReference Include="..\MathZ.Shared\MathZ.Shared.csproj" IsAspireProjectResource="false" />
   </ItemGroup>
