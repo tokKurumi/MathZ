@@ -8,11 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Asp.Versioning.Mvc" Version="8.0.0" />
-        <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.0.0" />
-        <PackageReference Include="Confluent.Kafka" Version="2.3.0" />
-        <PackageReference Include="MassTransit.Abstractions" Version="8.2.1" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.1" />
+        <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+        <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

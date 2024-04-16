@@ -7,9 +7,11 @@
         <UserSecretsId>5faa18b4-6d84-4182-a1bc-f95b9e4b389d</UserSecretsId>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-preview.4.24156.9" />
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-preview.5.24201.12" />
         <PackageReference Include="AutoMapper" Version="13.0.1" />
         <PackageReference Include="FluentResults" Version="3.15.2" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.2-develop.1740" />
+        <PackageReference Include="MediatR" Version="12.2.0" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
