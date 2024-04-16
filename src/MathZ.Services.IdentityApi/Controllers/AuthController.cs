@@ -1,46 +1,33 @@
 ﻿namespace MathZ.Services.IdentityApi.Controllers;
 
 using Asp.Versioning;
-using MassTransit;
-using MathZ.Services.IdentityApi.Models.Dtos;
-using MathZ.Services.IdentityApi.Services.IServices;
+using MathZ.Services.IdentityApi.Features.Commands.CreateUser;
+using MathZ.Services.IdentityApi.Features.Commands.GetToken;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [ApiVersion(1.0)]
 [Route("v{version:apiVersion}/[controller]")]
 public class AuthController(
-    IAuthService authService,
-    IUserAccountService userAccountService,
-    IPublishEndpoint publishEndpoint)
+    IMediator mediator)
     : ControllerBase
 {
-    private readonly IAuthService _authService = authService;
-    private readonly IUserAccountService _userAccountService = userAccountService;
-    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
+    private readonly IMediator _mediator = mediator;
 
     [HttpPost("Register")]
-    public async Task<IActionResult> RegisterAsync([FromBody] RegistrationRequestDto registrationRequest)
+    public async Task<IActionResult> RegisterAsync([FromBody] CreateUserCommand registrationRequest)
     {
-        var result = await _authService.RegisterAsync(registrationRequest);
-        if (result.Succeeded)
-        {
-            var createdUser = await _userAccountService.GetUserByUserNameAsync(registrationRequest.UserName);
-
-            if (createdUser.IsSuccess)
-            {
-                await _publishEndpoint.Publish(createdUser.Value);
-            }
-        }
+        var result = await _mediator.Send(registrationRequest);
 
         return result.Succeeded ? Ok() : BadRequest(result.Errors);
     }
 
     [HttpPost("Login")]
-    public async Task<IActionResult> LoginAsync([FromBody] LoginRequestDto loginRequest)
+    public async Task<IActionResult> LoginAsync([FromBody] GetTokenCommand loginRequest)
     {
-        var tokenResult = await _authService.LoginAsync(loginRequest);
+        var result = await _mediator.Send(loginRequest);
 
-        return tokenResult.IsSuccess ? Ok(tokenResult.Value) : BadRequest(tokenResult.Reasons);
+        return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Errors);
     }
 }

@@ -1,41 +1,42 @@
 ﻿namespace MathZ.Services.IdentityApi.Services;
 
-using AutoMapper;
 using FluentResults;
-using MassTransit;
-using MathZ.Services.IdentityApi.Models.Dtos;
+using MathZ.Services.IdentityApi.Models;
 using MathZ.Services.IdentityApi.Services.IServices;
 using MathZ.Shared.Models;
 using Microsoft.AspNetCore.Identity;
 
 public class AuthService(
-    IMapper mapper,
     UserManager<User> userManager,
-    IJwtGeneratorService jwtGeneratorService,
-    IPublishEndpoint publishEndpoint)
+    IJwtGeneratorService jwtGeneratorService)
     : IAuthService
 {
-    private readonly IMapper _mapper = mapper;
     private readonly UserManager<User> _userManager = userManager;
     private readonly IJwtGeneratorService _jwtGeneratorService = jwtGeneratorService;
-    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
 
-    public async Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequest)
+    public async Task<Result<JwtToken>> LoginAsync(User user, string password)
     {
-        var user = await _userManager.FindByNameAsync(loginRequest.UserName);
-
-        return user switch
+        var foundUser = await _userManager.FindByNameAsync(user.UserName!);
+        if (foundUser is null)
         {
-            not null => new LoginResponseDto(await _jwtGeneratorService.GenerateTokenAsync(user)),
-            _ => Result.Fail<LoginResponseDto>("Invalid UserName or Password."),
-        };
+            return Result.Fail<JwtToken>("This user does not exist.");
+        }
+
+        var isPasswordValid = await _userManager.CheckPasswordAsync(foundUser, password);
+        if (!isPasswordValid)
+        {
+            return Result.Fail<JwtToken>("Invalid UserName or Password.");
+        }
+
+        var token = await _jwtGeneratorService.GenerateTokenAsync(foundUser);
+        var loginResponse = new JwtToken(token);
+
+        return Result.Ok(loginResponse);
     }
 
-    public async Task<IdentityResult> RegisterAsync(RegistrationRequestDto registrationRequest)
+    public async Task<IdentityResult> RegisterAsync(User user, string password)
     {
-        var userToCreate = _mapper.Map<User>(registrationRequest);
-
-        var result = await _userManager.CreateAsync(userToCreate, registrationRequest.Password);
+        var result = await _userManager.CreateAsync(user, password);
 
         return result;
     }

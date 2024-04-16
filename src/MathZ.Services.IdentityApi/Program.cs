@@ -31,11 +31,6 @@ builder.Services
     .AddDefaultTokenProviders();
 builder.Services.AddHostedService<DatabaseInitializerService>();
 
-builder.Services.AddAutoMapper(config =>
-{
-    config.AddProfile<IdentityProfile>();
-});
-
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(config =>
@@ -59,6 +54,15 @@ builder.Services.AddSwaggerGen(config =>
 });
 builder.Services.AddCustomApiVersioning();
 builder.Services.AddSwaggerGenNewtonsoftSupport();
+
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile<IdentityProfile>();
+});
+builder.Services.AddMediatR(config =>
+{
+    config.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
 
 builder.Services.AddScoped<IJwtGeneratorService, JwtGeneratorService>();
 builder.Services.AddScoped<IAuthService, AuthService>();

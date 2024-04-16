@@ -1,6 +1,8 @@
 ﻿namespace MathZ.Services.IdentityApi.MappingProfiles;
 
 using AutoMapper;
+using MathZ.Services.IdentityApi.Features.Commands.CreateUser;
+using MathZ.Services.IdentityApi.Features.Commands.GetToken;
 using MathZ.Services.IdentityApi.Models;
 using MathZ.Services.IdentityApi.Models.Dtos;
 using MathZ.Shared.Models;
@@ -18,13 +20,16 @@ public class IdentityProfile : Profile
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName));
 
-        CreateMap<RegistrationRequestDto, User>()
+        CreateMap<CreateUserCommand, User>()
             .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
             .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Email.ToUpperInvariant()))
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
             .ForMember(dest => dest.NormalizedUserName, opt => opt.MapFrom(src => src.UserName.ToUpperInvariant()))
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName));
+
+        CreateMap<GetTokenCommand, User>()
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName));
 
         CreateMap<User, ResponseUserDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))

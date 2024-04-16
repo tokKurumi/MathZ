@@ -1,10 +1,9 @@
 ﻿namespace MathZ.Services.IdentityApi.Models.Dtos;
 
-using System.ComponentModel;
-
-[DisplayName("RegistrationRequest")]
-public record RegistrationRequestDto(
+public record UserDto(
+    string Id,
     string Email,
+    bool EmailConfirmed,
     string UserName,
     string Password,
     string FirstName,
