@@ -25,12 +25,7 @@ public class ForumService(
 
     public IQueryable<MessageDto> GetMessages()
     {
-        return _mapper.ProjectTo<MessageDto>(_dbContext.Messages.AsNoTracking());
-    }
-
-    public async Task<int> GetTotalMessagesAsync(CancellationToken cancellationToken = default)
-    {
-        return await _dbContext.Messages.CountAsync(cancellationToken);
+        return _mapper.ProjectTo<MessageDto>(_dbContext.Messages.AsNoTracking().OrderBy(m => m.Created));
     }
 
     public async Task LikeMessageAsync(MessageLikeDto messageLike, CancellationToken cancellationToken = default)
@@ -43,12 +38,7 @@ public class ForumService(
 
     public IQueryable<MessageLikeDto> GetLikes()
     {
-        return _mapper.ProjectTo<MessageLikeDto>(_dbContext.Likes.AsNoTracking());
-    }
-
-    public async Task<int> GetTotalLikesAsync(CancellationToken cancellationToken = default)
-    {
-        return await _dbContext.Likes.CountAsync(cancellationToken);
+        return _mapper.ProjectTo<MessageLikeDto>(_dbContext.Likes.AsNoTracking().OrderBy(m => m.Created));
     }
 
     public async Task DislikeMessageAsync(MessageDislikeDto messageDislike, CancellationToken cancellationToken = default)
@@ -61,11 +51,6 @@ public class ForumService(
 
     public IQueryable<MessageDislikeDto> GetDislikes()
     {
-        return _mapper.ProjectTo<MessageDislikeDto>(_dbContext.Dislikes.AsNoTracking());
-    }
-
-    public async Task<int> GetTotalDislikesAsync(CancellationToken cancellationToken = default)
-    {
-        return await _dbContext.Dislikes.CountAsync(cancellationToken);
+        return _mapper.ProjectTo<MessageDislikeDto>(_dbContext.Dislikes.AsNoTracking().OrderBy(m => m.Created));
     }
 }

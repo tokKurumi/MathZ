@@ -15,12 +15,6 @@ public interface IForumService
 
     IQueryable<MessageDto> GetMessages();
 
-    Task<int> GetTotalDislikesAsync(CancellationToken cancellationToken = default);
-
-    Task<int> GetTotalLikesAsync(CancellationToken cancellationToken = default);
-
-    Task<int> GetTotalMessagesAsync(CancellationToken cancellationToken = default);
-
     Task LikeMessageAsync(MessageLikeDto messageLike, CancellationToken cancellationToken = default);
 
     Task SendMessageAsync(MessageDto message, CancellationToken cancellationToken = default);
