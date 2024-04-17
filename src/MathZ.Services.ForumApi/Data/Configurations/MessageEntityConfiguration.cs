@@ -17,6 +17,11 @@ public class MessageEntityConfiguration : IEntityTypeConfiguration<Message>
             .IsRequired(false);
 
         builder
+            .HasOne(m => m.ParentMessage)
+            .WithMany()
+            .HasForeignKey(m => m.ParentMessageId);
+
+        builder
             .HasMany(m => m.Likes)
             .WithOne(ml => ml.Message);
 

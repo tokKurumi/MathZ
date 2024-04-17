@@ -1,6 +1,8 @@
 using MathZ.ServiceDefaults;
 using MathZ.Services.ForumApi.Data;
 using MathZ.Services.ForumApi.Services;
+using MathZ.Services.ForumApi.Services.IServices;
+using MathZ.Services.IdentityApi.MappingProfiles;
 using MathZ.Shared;
 using MathZ.Shared.ServicesHelpers;
 using Microsoft.OpenApi.Models;
@@ -34,10 +36,16 @@ builder.Services.AddSwaggerGen(config =>
 builder.Services.AddCustomApiVersioning();
 builder.Services.AddSwaggerGenNewtonsoftSupport();
 
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile<ForumProfile>();
+});
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
+
+builder.Services.AddScoped<IForumService, ForumService>();
 
 builder.AddServiceDefaults();
 

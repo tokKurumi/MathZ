@@ -55,6 +55,7 @@ var emailEpi = builder
     .WithReference(emailDatabase)
     .WithReference(messageBus);
 
+// Forum
 var forumDatabase = builder
     .AddPostgres(AspireConnections.Database.ForumDatabaseServer, password: builder.CreateStablePassword(forumDatabasePassword!))
     .WithPgAdmin()
