@@ -96,19 +96,9 @@ public class UserAccountService(
         };
     }
 
-    public async Task<IEnumerable<ResponseUserDto>> GetUsersAsync(int skip, int count, CancellationToken cancellationToken = default)
+    public IQueryable<ResponseUserDto> GetUsers()
     {
-        return await _mapper.ProjectTo<ResponseUserDto>(
-            _userManager.Users
-            .AsNoTracking()
-            .Skip(skip)
-            .Take(count))
-            .ToArrayAsync(cancellationToken);
-    }
-
-    public async Task<int> GetUsersCountAsync(CancellationToken cancellationToken = default)
-    {
-        return await _userManager.Users.CountAsync(cancellationToken);
+        return _mapper.ProjectTo<ResponseUserDto>(_userManager.Users.AsNoTracking().OrderBy(u => u.Id));
     }
 
     public async Task<IEnumerable<ResponseUserDto>> GetUsersInRoleAsync(string role, int skip, int count)
@@ -172,7 +162,7 @@ public class UserAccountService(
         };
     }
 
-    public async Task<Result> UpdateUserPasswordByIdAsync(string id, string newPassword)
+    public async Task<Result> ChangeUserPasswordAsync(string id, string newPassword)
     {
         var user = await _userManager.FindByIdAsync(id);
         if (user is null)

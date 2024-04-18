@@ -1,8 +1,10 @@
 ﻿namespace MathZ.Services.IdentityApi.Controllers;
 
 using Asp.Versioning;
-using MathZ.Services.IdentityApi.Services.IServices;
+using MathZ.Services.IdentityApi.Features.Commands.CreateRole;
+using MathZ.Services.IdentityApi.Features.Commands.DeleteRole;
 using MathZ.Shared.Pagination;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,36 +13,37 @@ using Microsoft.AspNetCore.Mvc;
 [Authorize(Roles = "admin")]
 [Route("v{version:apiVersion}/[controller]")]
 public class RolesController(
-    IUserRolesService userRolesService)
+    IMediator mediator)
     : ControllerBase
 {
-    private readonly IUserRolesService _userRolesService = userRolesService;
+    private readonly IMediator _mediator = mediator;
 
     [HttpGet]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> GetAsync([FromQuery] PaginationRequest pagination, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAsync([FromQuery] PaginationQuery<string> pagination, CancellationToken cancellationToken)
     {
-        var roles = await _userRolesService.GetRolesAsync((pagination.PageNumber - 1) * pagination.PageSize, pagination.PageSize, cancellationToken);
-        var total = await _userRolesService.GetRolesCountAsync(cancellationToken);
+        var result = await _mediator.Send(pagination, cancellationToken);
 
-        return Ok(PaginationResponse<string>.Create(roles, total, pagination));
+        return Ok(result);
     }
 
     [HttpPost("{role}")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> CreateAsync([FromRoute] string role)
     {
-        var createResult = await _userRolesService.CreateRoleAsync(role);
+        var command = new CreateRoleCommand(role);
+        var result = await _mediator.Send(command);
 
-        return createResult.IsSuccess ? Ok() : StatusCode(500, createResult.Errors);
+        return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }
 
     [HttpDelete("{role}")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> DeleteAsync([FromRoute] string role)
     {
-        var deleteResult = await _userRolesService.DeleteRoleAsync(role);
+        var command = new DeleteRoleCommand(role);
+        var result = await _mediator.Send(command);
 
-        return deleteResult.IsSuccess ? Ok() : StatusCode(500, deleteResult.Errors);
+        return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }
 }

@@ -29,20 +29,10 @@ public interface IUserAccountService
     Task<Result<ResponseUserDto>> GetUserByEmailAsync(string email);
 
     /// <summary>
-    /// Get a list of users.
+    /// Get all users.
     /// </summary>
-    /// <param name="skip">The number of users to skip.</param>
-    /// <param name="count">The number of users to retrieve.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the list of users.</returns>
-    Task<IEnumerable<ResponseUserDto>> GetUsersAsync(int skip, int count, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Get the total number of users.
-    /// </summary>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the total number of users.</returns>
-    Task<int> GetUsersCountAsync(CancellationToken cancellationToken = default);
+    /// <returns>An IQueryable of ResponseUserDto representing all users.</returns>
+    IQueryable<ResponseUserDto> GetUsers();
 
     /// <summary>
     /// Update a user's profile by ID.
@@ -74,7 +64,7 @@ public interface IUserAccountService
     /// <param name="id">The ID of the user.</param>
     /// <param name="newPassword">The new password to set for the user.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task<Result> UpdateUserPasswordByIdAsync(string id, string newPassword);
+    Task<Result> ChangeUserPasswordAsync(string id, string newPassword);
 
     /// <summary>
     /// Get a list of users in a specific role.

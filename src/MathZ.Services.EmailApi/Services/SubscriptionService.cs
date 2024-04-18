@@ -1,5 +1,7 @@
 ﻿namespace MathZ.Services.EmailApi.Services;
 
+using System.Linq;
+using System.Threading;
 using AutoMapper;
 using FluentResults;
 using MathZ.Services.EmailApi.Data;
@@ -39,41 +41,21 @@ public class SubscriptionService(
         return Result.Ok();
     }
 
-    public async Task<IEnumerable<string>> GetMailingSubscribersByIdAsync(string mailingId, int skip, int count, CancellationToken cancellationToken = default)
+    public IQueryable<MailingDto> GetSubscribedMailingsByEmail(string email)
     {
-        return await _mailingDbContext.Subscribers
-            .AsNoTracking()
-            .Where(ms => ms.MailingId == mailingId)
-            .Skip(skip)
-            .Take(count)
-            .Select(ms => ms.Email)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<int> GetMailingSubscribersCountByIdAsync(string mailingId, CancellationToken cancellationToken = default)
-    {
-        return await _mailingDbContext.Subscribers
-            .AsNoTracking()
-            .CountAsync(ms => ms.MailingId == mailingId, cancellationToken);
-    }
-
-    public async Task<IEnumerable<MailingDto>> GetSubscribedMailingsByEmailAsync(string email, int skip, int count, CancellationToken cancellationToken = default)
-    {
-        return await _mapper.ProjectTo<MailingDto>(_mailingDbContext.Subscribers
+        return _mapper.ProjectTo<MailingDto>(_mailingDbContext.Subscribers
             .AsNoTracking()
             .Include(ms => ms.Mailing)
             .Where(ms => ms.Email == email)
-            .Skip(skip)
-            .Take(count)
-            .Select(ms => ms.Mailing))
-            .ToListAsync(cancellationToken);
+            .Select(ms => ms.Mailing));
     }
 
-    public async Task<int> GetSubscribedMailingsCountByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public IQueryable<string> GetMailingSubscribersById(string mailingId)
     {
-        return await _mailingDbContext.Subscribers
+        return _mailingDbContext.Subscribers
             .AsNoTracking()
-            .CountAsync(ms => ms.Email == email, cancellationToken);
+            .Where(ms => ms.MailingId == mailingId)
+            .Select(ms => ms.Email);
     }
 
     public async Task<Result> UnsubscribeMailingByIdAsync(string mailingId, string email, CancellationToken cancellationToken = default)

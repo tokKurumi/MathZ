@@ -1,8 +1,8 @@
 using MathZ.ServiceDefaults;
 using MathZ.Services.ForumApi.Data;
+using MathZ.Services.ForumApi.MappingProfiles;
 using MathZ.Services.ForumApi.Services;
 using MathZ.Services.ForumApi.Services.IServices;
-using MathZ.Services.IdentityApi.MappingProfiles;
 using MathZ.Shared;
 using MathZ.Shared.ServicesHelpers;
 using Microsoft.OpenApi.Models;

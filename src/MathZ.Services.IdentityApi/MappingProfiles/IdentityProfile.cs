@@ -2,7 +2,7 @@
 
 using AutoMapper;
 using MathZ.Services.IdentityApi.Features.Commands.CreateUser;
-using MathZ.Services.IdentityApi.Features.Commands.GetToken;
+using MathZ.Services.IdentityApi.Features.Queries.GetToken;
 using MathZ.Services.IdentityApi.Models;
 using MathZ.Services.IdentityApi.Models.Dtos;
 using MathZ.Shared.Models;
@@ -28,7 +28,7 @@ public class IdentityProfile : Profile
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
             .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName));
 
-        CreateMap<GetTokenCommand, User>()
+        CreateMap<GetTokenQuery, User>()
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName));
 
         CreateMap<User, ResponseUserDto>()

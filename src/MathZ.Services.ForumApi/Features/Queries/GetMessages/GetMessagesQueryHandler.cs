@@ -3,8 +3,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MathZ.Services.ForumApi.Models.Dtos;
-using MathZ.Services.ForumApi.Pagination;
 using MathZ.Services.ForumApi.Services.IServices;
+using MathZ.Shared.Pagination;
 using MediatR;
 
 public class GetMessagesQueryHandler(
@@ -15,6 +15,6 @@ public class GetMessagesQueryHandler(
 
     public async Task<PagedList<MessageDto>> Handle(PaginationQuery<MessageDto> request, CancellationToken cancellationToken)
     {
-        return await PagedList<MessageDto>.CreateAsync(_forumService.GetMessages(), request);
+        return await PagedList<MessageDto>.CreateAsync(_forumService.GetMessages(), request, cancellationToken);
     }
 }

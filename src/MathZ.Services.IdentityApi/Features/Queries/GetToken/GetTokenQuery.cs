@@ -1,4 +1,4 @@
-﻿namespace MathZ.Services.IdentityApi.Features.Commands.GetToken;
+﻿namespace MathZ.Services.IdentityApi.Features.Queries.GetToken;
 
 using System.ComponentModel;
 using FluentResults;
@@ -6,7 +6,7 @@ using MathZ.Services.IdentityApi.Models;
 using MediatR;
 
 [DisplayName("LoginRequest")]
-public record GetTokenCommand(
+public record GetTokenQuery(
     string UserName,
     string Password)
     : IRequest<Result<JwtToken>>;

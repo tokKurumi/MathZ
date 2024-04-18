@@ -1,8 +1,8 @@
 ﻿namespace MathZ.Services.ForumApi.Features.Queries.GetDislikes;
 
 using MathZ.Services.ForumApi.Models.Dtos;
-using MathZ.Services.ForumApi.Pagination;
 using MathZ.Services.ForumApi.Services.IServices;
+using MathZ.Shared.Pagination;
 using MediatR;
 
 public class GetDislikesQueryHandler(
@@ -13,6 +13,6 @@ public class GetDislikesQueryHandler(
 
     public async Task<PagedList<MessageDislikeDto>> Handle(PaginationQuery<MessageDislikeDto> request, CancellationToken cancellationToken)
     {
-        return await PagedList<MessageDislikeDto>.CreateAsync(_forumService.GetDislikes(), request);
+        return await PagedList<MessageDislikeDto>.CreateAsync(_forumService.GetDislikes(), request, cancellationToken);
     }
 }

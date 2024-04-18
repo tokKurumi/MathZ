@@ -2,9 +2,14 @@
 
 using System.Security.Claims;
 using Asp.Versioning;
+using MathZ.Services.EmailApi.Features.Commands.SubscribeMailingById;
+using MathZ.Services.EmailApi.Features.Commands.UnsibscribeMailing;
+using MathZ.Services.EmailApi.Features.Queries.GetMailingSubscribersById;
+using MathZ.Services.EmailApi.Features.Queries.GetSubscribedMailingsByEmail;
 using MathZ.Services.EmailApi.Models.Dtos;
 using MathZ.Services.EmailApi.Services.IServices;
 using MathZ.Shared.Pagination;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,52 +17,53 @@ using Microsoft.AspNetCore.Mvc;
 [ApiVersion(1.0)]
 [Route("v{version:apiVersion}/[controller]")]
 public class MailingSubscriptionController(
-    ISubscriptionService subscriptionService)
+    ISubscriptionService subscriptionService,
+    IMediator mediator)
     : ControllerBase
 {
     private readonly ISubscriptionService _subscriptionService = subscriptionService;
+    private readonly IMediator _mediator = mediator;
 
     [HttpPost("{mailingId}")]
     [Authorize]
     public async Task<IActionResult> SubscribeMailingByIdAsync([FromRoute] string mailingId, CancellationToken cancellationToken)
     {
         var email = User.FindFirst(ClaimTypes.Email)?.Value;
-
         if (email is null)
         {
             return StatusCode(500, "Something went wrong. Please, contact administrator.");
         }
 
-        var result = await _subscriptionService.SubscribeMailingByIdAsync(mailingId, email, cancellationToken);
+        var command = new SubscribeMailingByIdCommand(mailingId, email);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> GetSubscribedMailingsByEmailAsync([FromQuery] PaginationRequest pagination, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetSubscribedMailingsByEmailAsync([FromQuery] PaginationQuery<MailingDto> pagination, CancellationToken cancellationToken)
     {
         var email = User.FindFirst(ClaimTypes.Email)?.Value;
-
         if (email is null)
         {
             return StatusCode(500, "Something went wrong. Please, contact administrator.");
         }
 
-        var mailings = await _subscriptionService.GetSubscribedMailingsByEmailAsync(email, (pagination.PageNumber - 1) * pagination.PageSize, pagination.PageSize, cancellationToken);
-        var total = await _subscriptionService.GetSubscribedMailingsCountByEmailAsync(email, cancellationToken);
+        var query = new GetSubscribedMailingsByEmailQuery(email, pagination);
+        var result = await _mediator.Send(query, cancellationToken);
 
-        return Ok(PaginationResponse<MailingDto>.Create(mailings, total, pagination));
+        return Ok(result);
     }
 
     [HttpGet("Subscribers/{mailingId}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> GetMailingSubscribersByIdAsync([FromRoute] string mailingId, [FromQuery] PaginationRequest pagination, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetMailingSubscribersByIdAsync([FromRoute] string mailingId, [FromQuery] PaginationQuery<string> pagination, CancellationToken cancellationToken)
     {
-        var subs = await _subscriptionService.GetMailingSubscribersByIdAsync(mailingId, (pagination.PageNumber - 1) * pagination.PageSize, pagination.PageSize, cancellationToken);
-        var total = await _subscriptionService.GetMailingSubscribersCountByIdAsync(mailingId, cancellationToken);
+        var query = new GetMailingSubscribersByIdCommand(mailingId, pagination);
+        var result = await _mediator.Send(query, cancellationToken);
 
-        return Ok(PaginationResponse<string>.Create(subs, total, pagination));
+        return Ok(result);
     }
 
     [HttpDelete("{mailingId}")]
@@ -65,13 +71,13 @@ public class MailingSubscriptionController(
     public async Task<IActionResult> UnsubscribeMailingByIdAsync([FromRoute] string mailingId, CancellationToken cancellationToken)
     {
         var email = User.FindFirst(ClaimTypes.Email)?.Value;
-
         if (email is null)
         {
             return StatusCode(500, "Something went wrong. Please, contact administrator.");
         }
 
-        var result = await _subscriptionService.UnsubscribeMailingByIdAsync(mailingId, email, cancellationToken);
+        var command = new UnsubscribeMailingCommand(mailingId, email);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }

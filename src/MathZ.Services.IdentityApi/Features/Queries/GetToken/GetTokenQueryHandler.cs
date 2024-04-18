@@ -1,4 +1,4 @@
-﻿namespace MathZ.Services.IdentityApi.Features.Commands.GetToken;
+﻿namespace MathZ.Services.IdentityApi.Features.Queries.GetToken;
 
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,15 +9,15 @@ using MathZ.Services.IdentityApi.Services.IServices;
 using MathZ.Shared.Models;
 using MediatR;
 
-public class GetTokenCommandHandler(
+public class GetTokenQueryHandler(
     IMapper mapper,
     IAuthService authService)
-    : IRequestHandler<GetTokenCommand, Result<JwtToken>>
+    : IRequestHandler<GetTokenQuery, Result<JwtToken>>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IAuthService _authService = authService;
 
-    public async Task<Result<JwtToken>> Handle(GetTokenCommand request, CancellationToken cancellationToken)
+    public async Task<Result<JwtToken>> Handle(GetTokenQuery request, CancellationToken cancellationToken)
     {
         var user = _mapper.Map<User>(request);
 

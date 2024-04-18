@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathZ.ServiceDefaults", "Ma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathZ.Services.EmailApi", "MathZ.Services.EmailApi\MathZ.Services.EmailApi.csproj", "{6B2D6F93-85A3-4844-BBE6-31A0EE70B1A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathZ.Services.ForumApi", "MathZ.Services.ForumApi\MathZ.Services.ForumApi.csproj", "{C22CD459-4384-403D-9BA1-AD06F9128BC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathZ.Services.ForumApi", "MathZ.Services.ForumApi\MathZ.Services.ForumApi.csproj", "{C22CD459-4384-403D-9BA1-AD06F9128BC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

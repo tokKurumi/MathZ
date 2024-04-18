@@ -2,7 +2,7 @@
 
 using Asp.Versioning;
 using MathZ.Services.IdentityApi.Features.Commands.CreateUser;
-using MathZ.Services.IdentityApi.Features.Commands.GetToken;
+using MathZ.Services.IdentityApi.Features.Queries.GetToken;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +24,7 @@ public class AuthController(
     }
 
     [HttpPost("Login")]
-    public async Task<IActionResult> LoginAsync([FromBody] GetTokenCommand loginRequest)
+    public async Task<IActionResult> LoginAsync([FromBody] GetTokenQuery loginRequest)
     {
         var result = await _mediator.Send(loginRequest);
 

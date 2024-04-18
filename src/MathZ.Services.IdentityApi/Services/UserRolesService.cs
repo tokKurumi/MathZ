@@ -1,7 +1,5 @@
 ﻿namespace MathZ.Services.IdentityApi.Services;
 
-using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentResults;
@@ -39,17 +37,8 @@ public class UserRolesService(
         };
     }
 
-    public async Task<IEnumerable<string>> GetRolesAsync(int skip, int count, CancellationToken cancellationToken = default)
+    public IQueryable<string> GetRoles()
     {
-        return await _mapper.ProjectTo<string>(
-            _roleManager.Roles
-            .Skip(skip)
-            .Take(count))
-            .ToArrayAsync(cancellationToken);
-    }
-
-    public async Task<int> GetRolesCountAsync(CancellationToken cancellationToken = default)
-    {
-        return await _roleManager.Roles.CountAsync(cancellationToken);
+        return _mapper.ProjectTo<string>(_roleManager.Roles.AsNoTracking().OrderBy(r => r.Id));
     }
 }

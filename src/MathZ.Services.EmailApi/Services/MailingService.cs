@@ -57,37 +57,14 @@ public class MailingService(
         };
     }
 
-    public async Task<IEnumerable<MailingDto>> GetMailingsAsync(int skip, int count, CancellationToken cancellationToken = default)
+    public IQueryable<MailingDto> GetMailings()
     {
-        return await _mapper.ProjectTo<MailingDto>(_mailingDbContext.Mailings
-            .AsNoTracking()
-            .Skip(skip)
-            .Take(count))
-            .ToListAsync(cancellationToken);
+        return _mapper.ProjectTo<MailingDto>(_mailingDbContext.Mailings.AsNoTracking().OrderBy(m => m.Id));
     }
 
-    public async Task<int> GetMailingsCountAsync(CancellationToken cancellationToken = default)
+    public IQueryable<MailingEmailDto> GetMailingEmails()
     {
-        return await _mailingDbContext.Mailings
-            .AsNoTracking()
-            .CountAsync(cancellationToken);
-    }
-
-    public async Task<IEnumerable<MailingEmailDto>> GetMailingEmailsByIdAsync(string id, int skip, int count, CancellationToken cancellationToken = default)
-    {
-        return await _mapper.ProjectTo<MailingEmailDto>(_mailingDbContext.Emails
-            .AsNoTracking()
-            .Where(e => e.MailingId == id)
-            .Skip(skip)
-            .Take(count))
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<int> GetMailingEmailsCountByIdAsync(string id, CancellationToken cancellationToken = default)
-    {
-        return await _mailingDbContext.Emails
-            .AsNoTracking()
-            .CountAsync(e => e.MailingId == id, cancellationToken);
+        return _mapper.ProjectTo<MailingEmailDto>(_mailingDbContext.Emails.AsNoTracking().OrderBy(e => e.Id));
     }
 
     public async Task<Result> UpdateMailingByIdAsync(string id, JsonPatchDocument<MailingPatch> patch, CancellationToken cancellationToken = default)

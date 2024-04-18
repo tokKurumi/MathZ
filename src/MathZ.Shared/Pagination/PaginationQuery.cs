@@ -1,10 +1,11 @@
-﻿namespace MathZ.Services.ForumApi.Pagination;
+﻿namespace MathZ.Shared.Pagination;
 
 using System.ComponentModel;
 using MediatR;
 
 [DisplayName("Pagination")]
-public class PaginationQuery<T> : IRequest<PagedList<T>>
+public class PaginationQuery<T>
+    : IRequest<PagedList<T>>
 {
     public PaginationQuery()
     {

@@ -1,4 +1,4 @@
-﻿namespace MathZ.Services.IdentityApi.MappingProfiles;
+﻿namespace MathZ.Services.ForumApi.MappingProfiles;
 
 using AutoMapper;
 using MathZ.Services.ForumApi.Entities;

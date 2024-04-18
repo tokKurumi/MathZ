@@ -2,10 +2,17 @@
 
 using System.Security.Claims;
 using Asp.Versioning;
+using MathZ.Services.IdentityApi.Features.Commands.ChangeUserPassword;
+using MathZ.Services.IdentityApi.Features.Commands.DeleteUser;
+using MathZ.Services.IdentityApi.Features.Commands.PatchUser;
+using MathZ.Services.IdentityApi.Features.Commands.UpdateUserPassword;
+using MathZ.Services.IdentityApi.Features.Queries.GetUserByEmail;
+using MathZ.Services.IdentityApi.Features.Queries.GetUserById;
+using MathZ.Services.IdentityApi.Features.Queries.GetUserByUserName;
 using MathZ.Services.IdentityApi.Models;
 using MathZ.Services.IdentityApi.Models.Dtos;
-using MathZ.Services.IdentityApi.Services.IServices;
 using MathZ.Shared.Pagination;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +21,10 @@ using Microsoft.AspNetCore.Mvc;
 [ApiVersion(1.0)]
 [Route("v{version:apiVersion}/[controller]")]
 public class ProfileController(
-    IUserAccountService userAccountService)
+    IMediator mediator)
     : ControllerBase
 {
-    private readonly IUserAccountService _userAccountService = userAccountService;
+    private readonly IMediator _mediator = mediator;
 
     [HttpGet("Me")]
     [Authorize]
@@ -30,22 +37,26 @@ public class ProfileController(
             return StatusCode(500, "Something went wrong. Please, contact administrator.");
         }
 
-        var myProfileResult = await _userAccountService.GetUserByIdAsync(id);
-        return myProfileResult.IsSuccess ? Ok(myProfileResult.Value) : StatusCode(500, myProfileResult.Errors);
+        var command = new GetUserByIdQuery(id);
+        var result = await _mediator.Send(command);
+
+        return result.IsSuccess ? Ok(result.Value) : StatusCode(500, result.Errors);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserProfileByIdAsync([FromRoute] string id)
     {
-        var user = await _userAccountService.GetUserByIdAsync(id);
+        var query = new GetUserByIdQuery(id);
+        var result = await _mediator.Send(query);
 
-        return user.IsSuccess ? Ok(user.Value) : NotFound(user.Errors);
+        return result.IsSuccess ? Ok(result.Value) : NotFound(result.Errors);
     }
 
     [HttpGet("UserName/{userName}")]
     public async Task<IActionResult> GetUserProfileByUserNameAsync(string userName)
     {
-        var user = await _userAccountService.GetUserByUserNameAsync(userName);
+        var query = new GetUserByUserNameQuery(userName);
+        var user = await _mediator.Send(query);
 
         return user.IsSuccess ? Ok(user.Value) : NotFound(user.Errors);
     }
@@ -53,19 +64,19 @@ public class ProfileController(
     [HttpGet("Email/{email}")]
     public async Task<IActionResult> GetUserProfileByEmailAsync(string email)
     {
-        var user = await _userAccountService.GetUserByEmailAsync(email);
+        var query = new GetUserByEmailQuery(email);
+        var user = await _mediator.Send(query);
 
         return user.IsSuccess ? Ok(user.Value) : NotFound(user.Errors);
     }
 
     [HttpGet]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> GetUsersProfilesAsync([FromQuery] PaginationRequest pagination, CancellationToken cancellation)
+    public async Task<IActionResult> GetUsersProfilesAsync([FromQuery] PaginationQuery<ResponseUserDto> pagination, CancellationToken cancellation)
     {
-        var users = await _userAccountService.GetUsersAsync((pagination.PageNumber - 1) * pagination.PageSize, pagination.PageSize, cancellation);
-        var total = await _userAccountService.GetUsersCountAsync(cancellation);
+        var users = await _mediator.Send(pagination, cancellation);
 
-        return Ok(PaginationResponse<ResponseUserDto>.Create(users, total, pagination));
+        return Ok(users);
     }
 
     [HttpPatch("Me")]
@@ -79,16 +90,20 @@ public class ProfileController(
             return StatusCode(500, "Something went wrong. Please, contact administrator.");
         }
 
-        var patchResult = await _userAccountService.PatchUserAccountByIdAsync(id, patchProfile);
-        return patchResult.IsSuccess ? Ok(patchResult.Value) : StatusCode(500, patchResult.Errors);
+        var command = new PatchUserCommand(id, patchProfile);
+        var result = await _mediator.Send(command);
+
+        return result.IsSuccess ? Ok(result.Value) : StatusCode(500, result.Errors);
     }
 
     [HttpPatch("{id}")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> PatchUserProfileByIdAsync([FromRoute] string id, [FromBody] JsonPatchDocument<UserPatchProfile> patchProfile)
     {
-        var patchResult = await _userAccountService.PatchUserAccountByIdAsync(id, patchProfile);
-        return patchResult.IsSuccess ? Ok(patchResult.Value) : StatusCode(500, patchResult.Errors);
+        var command = new PatchUserCommand(id, patchProfile);
+        var result = await _mediator.Send(command);
+
+        return result.IsSuccess ? Ok(result.Value) : StatusCode(500, result.Errors);
     }
 
     [HttpPut("Me/Password")]
@@ -102,16 +117,20 @@ public class ProfileController(
             return StatusCode(500, "Something went wrong. Please, contact administrator.");
         }
 
-        var updatePasswordResult = await _userAccountService.UpdateUserPasswordByIdAsync(id, updatePasswordRequest.CurrentPassword, updatePasswordRequest.NewPassword);
-        return updatePasswordResult.IsSuccess ? Ok() : StatusCode(500, updatePasswordResult.Errors);
+        var command = new UpdateUserPasswordCommand(id, updatePasswordRequest.CurrentPassword, updatePasswordRequest.NewPassword);
+        var result = await _mediator.Send(command);
+
+        return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }
 
     [HttpPut("{id}/Password")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> UpdateUserProfilePasswordAsync([FromRoute] string id, [FromBody] string newPassword)
     {
-        var updatePasswordResult = await _userAccountService.UpdateUserPasswordByIdAsync(id, newPassword);
-        return updatePasswordResult.IsSuccess ? Ok() : StatusCode(500, updatePasswordResult.Errors);
+        var command = new ChangeUserPasswordCommand(id, newPassword);
+        var result = await _mediator.Send(command);
+
+        return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }
 
     [HttpDelete("Me")]
@@ -125,15 +144,19 @@ public class ProfileController(
             return StatusCode(500, "Something went wrong. Please, contact administrator.");
         }
 
-        var deleteProfileResult = await _userAccountService.DeleteUserProfileByIdAsync(id);
-        return deleteProfileResult.IsSuccess ? Ok() : StatusCode(500, deleteProfileResult.Errors);
+        var command = new DeleteUserCommand(id);
+        var result = await _mediator.Send(command);
+
+        return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> DeleteUserProfileByIdAsync([FromRoute] string id)
     {
-        var deleteProfileResult = await _userAccountService.DeleteUserProfileByIdAsync(id);
-        return deleteProfileResult.IsSuccess ? Ok() : StatusCode(500, deleteProfileResult.Errors);
+        var command = new DeleteUserCommand(id);
+        var result = await _mediator.Send(command);
+
+        return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }
 }

@@ -44,38 +44,10 @@ public interface IMailingService
     Task<Result<MailingDto>> GetMailingByTopicAsync(string topic, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Retrieves a list of mailings.
+    /// Retrieves a queryable list of mailing emails.
     /// </summary>
-    /// <param name="skip">The number of mailings to skip.</param>
-    /// <param name="count">The number of mailings to retrieve.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task<IEnumerable<MailingDto>> GetMailingsAsync(int skip, int count, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Retrieves the total count of mailings.
-    /// </summary>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task<int> GetMailingsCountAsync(CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Retrieves a list of mailing emails by mailing ID.
-    /// </summary>
-    /// <param name="id">The ID of the mailing.</param>
-    /// <param name="skip">The number of mailing emails to skip.</param>
-    /// <param name="count">The number of mailing emails to retrieve.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task<IEnumerable<MailingEmailDto>> GetMailingEmailsByIdAsync(string id, int skip, int count, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Retrieves the total count of mailing emails by mailing ID.
-    /// </summary>
-    /// <param name="id">The ID of the mailing.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task<int> GetMailingEmailsCountByIdAsync(string id, CancellationToken cancellationToken = default);
+    /// <returns>A queryable list of mailing emails.</returns>
+    IQueryable<MailingEmailDto> GetMailingEmails();
 
     /// <summary>
     /// Sends an email using the mailing ID, subject, and body.
@@ -95,4 +67,10 @@ public interface IMailingService
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task<Result> UpdateMailingByIdAsync(string id, JsonPatchDocument<MailingPatch> patch, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves a queryable list of mailings.
+    /// </summary>
+    /// <returns>A queryable list of mailings.</returns>
+    IQueryable<MailingDto> GetMailings();
 }
