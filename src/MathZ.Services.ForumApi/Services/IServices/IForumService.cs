@@ -9,9 +9,9 @@ public interface IForumService
 {
     Task DislikeMessageAsync(MessageDislikeDto messageDislike, CancellationToken cancellationToken = default);
 
-    IQueryable<MessageDislikeDto> GetDislikes();
+    IQueryable<MessageDislikeDto> GetDislikes(string messageId);
 
-    IQueryable<MessageLikeDto> GetLikes();
+    IQueryable<MessageLikeDto> GetLikes(string messageId);
 
     IQueryable<MessageDto> GetMessages();
 

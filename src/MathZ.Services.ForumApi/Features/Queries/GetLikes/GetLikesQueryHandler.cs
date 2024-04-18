@@ -7,12 +7,12 @@ using MediatR;
 
 public class GetLikesQueryHandler(
     IForumService forumService)
-    : IRequestHandler<PaginationQuery<MessageLikeDto>, PagedList<MessageLikeDto>>
+    : IRequestHandler<GetLikesQuery, PagedList<MessageLikeDto>>
 {
     private readonly IForumService _forumService = forumService;
 
-    public async Task<PagedList<MessageLikeDto>> Handle(PaginationQuery<MessageLikeDto> request, CancellationToken cancellationToken)
+    public Task<PagedList<MessageLikeDto>> Handle(GetLikesQuery request, CancellationToken cancellationToken)
     {
-        return await PagedList<MessageLikeDto>.CreateAsync(_forumService.GetLikes(), request, cancellationToken);
+        return PagedList<MessageLikeDto>.CreateAsync(_forumService.GetLikes(request.MessageId), request, cancellationToken);
     }
 }

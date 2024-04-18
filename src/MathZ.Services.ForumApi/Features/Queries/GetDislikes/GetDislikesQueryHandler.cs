@@ -7,12 +7,12 @@ using MediatR;
 
 public class GetDislikesQueryHandler(
     IForumService forumService)
-    : IRequestHandler<PaginationQuery<MessageDislikeDto>, PagedList<MessageDislikeDto>>
+    : IRequestHandler<GetDislikesQuery, PagedList<MessageDislikeDto>>
 {
     private readonly IForumService _forumService = forumService;
 
-    public async Task<PagedList<MessageDislikeDto>> Handle(PaginationQuery<MessageDislikeDto> request, CancellationToken cancellationToken)
+    public Task<PagedList<MessageDislikeDto>> Handle(GetDislikesQuery request, CancellationToken cancellationToken)
     {
-        return await PagedList<MessageDislikeDto>.CreateAsync(_forumService.GetDislikes(), request, cancellationToken);
+        return PagedList<MessageDislikeDto>.CreateAsync(_forumService.GetDislikes(request.MessageId), request, cancellationToken);
     }
 }

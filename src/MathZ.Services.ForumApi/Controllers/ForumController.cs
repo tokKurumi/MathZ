@@ -5,6 +5,8 @@ using Asp.Versioning;
 using MathZ.Services.ForumApi.Features.Commands.CreateDislike;
 using MathZ.Services.ForumApi.Features.Commands.CreateLike;
 using MathZ.Services.ForumApi.Features.Commands.CreateMessage;
+using MathZ.Services.ForumApi.Features.Queries.GetDislikes;
+using MathZ.Services.ForumApi.Features.Queries.GetLikes;
 using MathZ.Services.ForumApi.Models.Dtos;
 using MathZ.Shared.Pagination;
 using MediatR;
@@ -44,14 +46,14 @@ public class ForumController(
         return Ok(messages);
     }
 
-    [HttpPost("Like")]
+    [HttpPost("Like/{messageId}")]
     [Authorize]
-    public async Task<IActionResult> LikeMessageAsync([FromBody] LikeMessageRequestDto likeMessageRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> LikeMessageAsync([FromRoute] string messageId, CancellationToken cancellationToken)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         var command = new CreateLikeCommand(
-            likeMessageRequest.MessageId,
+            messageId,
             userId!);
 
         await _mediator.Send(command, cancellationToken);
@@ -59,22 +61,23 @@ public class ForumController(
         return Ok();
     }
 
-    [HttpGet("Like")]
-    public async Task<IActionResult> GetLikesAsync([FromQuery] PaginationQuery<MessageLikeDto> pagination, CancellationToken cancellationToken)
+    [HttpGet("Like/{messageId}")]
+    public async Task<IActionResult> GetLikesAsync([FromRoute] string messageId, [FromQuery] PaginationQuery<MessageLikeDto> pagination, CancellationToken cancellationToken)
     {
-        var likes = await _mediator.Send(pagination, cancellationToken);
+        var query = new GetLikesQuery(messageId, pagination);
+        var likes = await _mediator.Send(query, cancellationToken);
 
         return Ok(likes);
     }
 
-    [HttpPost("Dislike")]
+    [HttpPost("Dislike/{messageId}")]
     [Authorize]
-    public async Task<IActionResult> DislikeMessageAsync([FromBody] DislikeMessageRequestDto dislikeMessageRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> DislikeMessageAsync([FromRoute] string messageId, CancellationToken cancellationToken)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         var command = new CreateDislikeCommand(
-            dislikeMessageRequest.MessageId,
+            messageId,
             userId!);
 
         await _mediator.Send(command, cancellationToken);
@@ -82,10 +85,11 @@ public class ForumController(
         return Ok();
     }
 
-    [HttpGet("Dislike")]
-    public async Task<IActionResult> GetDislikesAsync([FromQuery] PaginationQuery<MessageLikeDto> pagination, CancellationToken cancellationToken)
+    [HttpGet("Dislike/{messageId}")]
+    public async Task<IActionResult> GetDislikesAsync([FromRoute] string messageId, [FromQuery] PaginationQuery<MessageLikeDto> pagination, CancellationToken cancellationToken)
     {
-        var dislikes = await _mediator.Send(pagination, cancellationToken);
+        var query = new GetDislikesQuery(messageId, pagination);
+        var dislikes = await _mediator.Send(query, cancellationToken);
 
         return Ok(dislikes);
     }

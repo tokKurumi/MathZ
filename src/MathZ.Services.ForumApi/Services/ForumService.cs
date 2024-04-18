@@ -36,9 +36,12 @@ public class ForumService(
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public IQueryable<MessageLikeDto> GetLikes()
+    public IQueryable<MessageLikeDto> GetLikes(string messageId)
     {
-        return _mapper.ProjectTo<MessageLikeDto>(_dbContext.Likes.AsNoTracking().OrderBy(m => m.Created));
+        return _mapper.ProjectTo<MessageLikeDto>(
+            _dbContext.Likes.AsNoTracking()
+            .Where(m => m.MessageId == messageId)
+            .OrderBy(m => m.Created));
     }
 
     public async Task DislikeMessageAsync(MessageDislikeDto messageDislike, CancellationToken cancellationToken = default)
@@ -49,8 +52,11 @@ public class ForumService(
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public IQueryable<MessageDislikeDto> GetDislikes()
+    public IQueryable<MessageDislikeDto> GetDislikes(string messageId)
     {
-        return _mapper.ProjectTo<MessageDislikeDto>(_dbContext.Dislikes.AsNoTracking().OrderBy(m => m.Created));
+        return _mapper.ProjectTo<MessageDislikeDto>(
+            _dbContext.Dislikes.AsNoTracking()
+            .Where(m => m.MessageId == messageId)
+            .OrderBy(m => m.Created));
     }
 }
