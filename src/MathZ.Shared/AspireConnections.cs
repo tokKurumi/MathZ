@@ -2,6 +2,8 @@
 
 public static class AspireConnections
 {
+    public const string ApiGateway = "mathz-apigateway";
+
     public static class Api
     {
         public const string IdentityApi = "mathz-services-identityapi";

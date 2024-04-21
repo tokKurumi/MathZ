@@ -48,7 +48,7 @@ var emailDatabase = builder
     .WithDataVolume(AspireConnections.Database.EmailDatabase)
     .AddDatabase(AspireConnections.Database.EmailDatabase);
 
-var emailEpi = builder
+var emailApi = builder
     .AddProject<Projects.MathZ_Services_EmailApi>(AspireConnections.Api.EmailApi)
     .WithJwt(jwtSecret, jwtAudience, jwtIssuer)
     .WithSmtp(smtpFrom, smtpHost, smtpPort, smtpUserName, smtpPassword)
@@ -66,5 +66,12 @@ var forumApi = builder
     .AddProject<Projects.MathZ_Services_ForumApi>(AspireConnections.Api.ForumApi)
     .WithJwt(jwtSecret, jwtAudience, jwtIssuer)
     .WithReference(forumDatabase);
+
+builder.AddYarp(AspireConnections.ApiGateway)
+    .WithHttpEndpoint(port: 8080)
+    .WithReference(identityApi)
+    .WithReference(emailApi)
+    .WithReference(forumApi)
+    .LoadFromConfiguration("ReverseProxy");
 
 await builder.Build().RunAsync();
