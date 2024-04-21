@@ -27,11 +27,6 @@ builder.Services.AddMassTransit(x =>
 builder.AddNpgsqlDbContext<MailingDbContext>(AspireConnections.Database.EmailDatabase);
 builder.Services.AddHostedService<DatabaseInitializerService>();
 
-builder.Services.AddAutoMapper(config =>
-{
-    config.AddProfile<EmailProfile>();
-});
-
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(config =>
@@ -55,6 +50,15 @@ builder.Services.AddSwaggerGen(config =>
 });
 builder.Services.AddCustomApiVersioning();
 builder.Services.AddSwaggerGenNewtonsoftSupport();
+
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddProfile<EmailProfile>();
+});
+builder.Services.AddMediatR(config =>
+{
+    config.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
 
 builder.Services.AddSingleton(serviceProvider =>
 {
