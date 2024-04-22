@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 [ApiVersion(1.0)]
 [Route("v{version:apiVersion}/[controller]")]
-public class ForumController(
+public class ForumsController(
     IMediator mediator)
     : ControllerBase
 {
@@ -46,7 +46,7 @@ public class ForumController(
         return Ok(messages);
     }
 
-    [HttpPost("Like/{messageId}")]
+    [HttpPost("Likes/{messageId}")]
     [Authorize]
     public async Task<IActionResult> LikeMessageAsync([FromRoute] string messageId, CancellationToken cancellationToken)
     {
@@ -61,7 +61,7 @@ public class ForumController(
         return Ok();
     }
 
-    [HttpGet("Like/{messageId}")]
+    [HttpGet("Likes/{messageId}")]
     public async Task<IActionResult> GetLikesAsync([FromRoute] string messageId, [FromQuery] PaginationQuery<MessageLikeDto> pagination, CancellationToken cancellationToken)
     {
         var query = new GetLikesQuery(messageId, pagination);
@@ -70,7 +70,7 @@ public class ForumController(
         return Ok(likes);
     }
 
-    [HttpPost("Dislike/{messageId}")]
+    [HttpPost("Dislikes/{messageId}")]
     [Authorize]
     public async Task<IActionResult> DislikeMessageAsync([FromRoute] string messageId, CancellationToken cancellationToken)
     {
@@ -85,7 +85,7 @@ public class ForumController(
         return Ok();
     }
 
-    [HttpGet("Dislike/{messageId}")]
+    [HttpGet("Dislikes/{messageId}")]
     public async Task<IActionResult> GetDislikesAsync([FromRoute] string messageId, [FromQuery] PaginationQuery<MessageLikeDto> pagination, CancellationToken cancellationToken)
     {
         var query = new GetDislikesQuery(messageId, pagination);

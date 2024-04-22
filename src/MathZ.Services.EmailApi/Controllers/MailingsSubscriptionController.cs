@@ -7,7 +7,6 @@ using MathZ.Services.EmailApi.Features.Commands.UnsibscribeMailing;
 using MathZ.Services.EmailApi.Features.Queries.GetMailingSubscribersById;
 using MathZ.Services.EmailApi.Features.Queries.GetSubscribedMailingsByEmail;
 using MathZ.Services.EmailApi.Models.Dtos;
-using MathZ.Services.EmailApi.Services.IServices;
 using MathZ.Shared.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -16,12 +15,10 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 [ApiVersion(1.0)]
 [Route("v{version:apiVersion}/[controller]")]
-public class MailingSubscriptionController(
-    ISubscriptionService subscriptionService,
+public class MailingsSubscriptionController(
     IMediator mediator)
     : ControllerBase
 {
-    private readonly ISubscriptionService _subscriptionService = subscriptionService;
     private readonly IMediator _mediator = mediator;
 
     [HttpPost("{mailingId}")]
@@ -56,7 +53,7 @@ public class MailingSubscriptionController(
         return Ok(result);
     }
 
-    [HttpGet("Subscribers/{mailingId}")]
+    [HttpGet("{mailingId}/Subscribers")]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetMailingSubscribersByIdAsync([FromRoute] string mailingId, [FromQuery] PaginationQuery<string> pagination, CancellationToken cancellationToken)
     {

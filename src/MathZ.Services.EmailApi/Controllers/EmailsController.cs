@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 [ApiVersion(1.0)]
 [Authorize(Roles = "admin")]
 [Route("v{version:apiVersion}/[controller]")]
-public class EmailController(
+public class EmailsController(
     IMediator mediator)
     : ControllerBase
 {

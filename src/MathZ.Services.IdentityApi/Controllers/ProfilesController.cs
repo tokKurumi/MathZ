@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 [ApiVersion(1.0)]
 [Route("v{version:apiVersion}/[controller]")]
-public class ProfileController(
+public class ProfilesController(
     IMediator mediator)
     : ControllerBase
 {
@@ -37,8 +37,8 @@ public class ProfileController(
             return StatusCode(500, "Something went wrong. Please, contact administrator.");
         }
 
-        var command = new GetUserByIdQuery(id);
-        var result = await _mediator.Send(command);
+        var query = new GetUserByIdQuery(id);
+        var result = await _mediator.Send(query);
 
         return result.IsSuccess ? Ok(result.Value) : StatusCode(500, result.Errors);
     }

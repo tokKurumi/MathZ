@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 [ApiVersion(1.0)]
 [Route("v{version:apiVersion}/[controller]")]
-public class MailingController(
+public class MailingsController(
     IMediator mediator)
     : ControllerBase
 {

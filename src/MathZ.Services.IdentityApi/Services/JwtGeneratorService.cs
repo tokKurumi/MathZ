@@ -16,6 +16,8 @@ public class JwtGeneratorService(
     UserManager<User> userManager)
     : IJwtGeneratorService
 {
+    private const int ExpiresInSeconds = 1800;
+
     private readonly IConfiguration _configuration = configuration;
     private readonly UserManager<User> _userManager = userManager;
 
@@ -29,19 +31,21 @@ public class JwtGeneratorService(
         var claims = await BuildClaimsAsync(user);
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        var tokenSecriptor = new SecurityTokenDescriptor()
+        var tokenDecriptor = new SecurityTokenDescriptor()
         {
             Audience = audience,
             Issuer = issuer,
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddMinutes(30),
+            Expires = DateTime.UtcNow.AddMinutes(ExpiresInSeconds),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey)),
                 SecurityAlgorithms.HmacSha256Signature),
         };
 
-        var token = tokenHandler.CreateToken(tokenSecriptor);
-        return tokenHandler.WriteToken(token);
+        var securityToken = tokenHandler.CreateToken(tokenDecriptor);
+
+        var token = tokenHandler.WriteToken(securityToken);
+        return token;
     }
 
     protected async Task<IEnumerable<Claim>> BuildClaimsAsync(User user)
