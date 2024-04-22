@@ -3,20 +3,6 @@ using MathZ.Shared;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-// JWT
-var jwtOptions = builder.Configuration.GetSection("JwtOptions");
-var jwtSecret = jwtOptions["Secret"];
-var jwtAudience = jwtOptions["Audience"];
-var jwtIssuer = jwtOptions["Issuer"];
-
-// SMTP
-var smtpOptions = builder.Configuration.GetSection("SMTP");
-var smtpFrom = smtpOptions["From"];
-var smtpHost = smtpOptions["Host"];
-var smtpPort = int.Parse(smtpOptions["Port"] ?? string.Empty);
-var smtpUserName = smtpOptions["UserName"];
-var smtpPassword = builder.Configuration["SMTP:Password"];
-
 // Database passwords
 var databasePasswords = builder.Configuration.GetSection("DatabasePasswords");
 var identityDatabasePassword = databasePasswords["Identity"];
@@ -37,7 +23,7 @@ var identityDatabase = builder
 
 var identityApi = builder
     .AddProject<Projects.MathZ_Services_IdentityApi>(AspireConnections.Api.IdentityApi)
-    .WithJwt(jwtSecret, jwtAudience, jwtIssuer)
+    .WithJwt("JwtOptions")
     .WithReference(identityDatabase)
     .WithReference(messageBus);
 
@@ -50,8 +36,8 @@ var emailDatabase = builder
 
 var emailApi = builder
     .AddProject<Projects.MathZ_Services_EmailApi>(AspireConnections.Api.EmailApi)
-    .WithJwt(jwtSecret, jwtAudience, jwtIssuer)
-    .WithSmtp(smtpFrom, smtpHost, smtpPort, smtpUserName, smtpPassword)
+    .WithJwt("JwtOptions")
+    .WithSmtp("SMTP")
     .WithReference(emailDatabase)
     .WithReference(messageBus);
 
@@ -64,7 +50,7 @@ var forumDatabase = builder
 
 var forumApi = builder
     .AddProject<Projects.MathZ_Services_ForumApi>(AspireConnections.Api.ForumApi)
-    .WithJwt(jwtSecret, jwtAudience, jwtIssuer)
+    .WithJwt("JwtOptions")
     .WithReference(forumDatabase);
 
 builder.AddYarp(AspireConnections.ApiGateway)
