@@ -5,7 +5,7 @@ using MathZ.Services.EmailApi.Models.Dtos;
 using MathZ.Services.EmailApi.Services.IServices;
 using MediatR;
 
-public class GetMailingByIdCommandHandler(
+public class GetMailingByIdQueryHandler(
     IMailingService mailingService)
     : IRequestHandler<GetMailingByIdQuery, Result<MailingDto>>
 {

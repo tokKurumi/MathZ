@@ -4,13 +4,13 @@ using MathZ.Services.EmailApi.Services.IServices;
 using MathZ.Shared.Pagination;
 using MediatR;
 
-public class GetMailingSubscribersByIdCommandHandler(
+public class GetMailingSubscribersByIdQueryHandler(
     ISubscriptionService subscriptionService)
-    : IRequestHandler<GetMailingSubscribersByIdCommand, PagedList<string>>
+    : IRequestHandler<GetMailingSubscribersByIdQuery, PagedList<string>>
 {
     private readonly ISubscriptionService _subscriptionService = subscriptionService;
 
-    public Task<PagedList<string>> Handle(GetMailingSubscribersByIdCommand request, CancellationToken cancellationToken)
+    public Task<PagedList<string>> Handle(GetMailingSubscribersByIdQuery request, CancellationToken cancellationToken)
     {
         return PagedList<string>.CreateAsync(_subscriptionService.GetMailingSubscribersById(request.MailingId), request, cancellationToken);
     }

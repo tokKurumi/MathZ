@@ -2,16 +2,16 @@
 
 using MathZ.Shared.Pagination;
 
-public class GetMailingSubscribersByIdCommand
+public class GetMailingSubscribersByIdQuery
     : PaginationQuery<string>
 {
-    public GetMailingSubscribersByIdCommand()
+    public GetMailingSubscribersByIdQuery()
         : base()
     {
         MailingId = string.Empty;
     }
 
-    public GetMailingSubscribersByIdCommand(string mailingId, PaginationQuery<string> pagination)
+    public GetMailingSubscribersByIdQuery(string mailingId, PaginationQuery<string> pagination)
     {
         MailingId = mailingId;
 

@@ -57,7 +57,7 @@ public class MailingsSubscriptionController(
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetMailingSubscribersByIdAsync([FromRoute] string mailingId, [FromQuery] PaginationQuery<string> pagination, CancellationToken cancellationToken)
     {
-        var query = new GetMailingSubscribersByIdCommand(mailingId, pagination);
+        var query = new GetMailingSubscribersByIdQuery(mailingId, pagination);
         var result = await _mediator.Send(query, cancellationToken);
 
         return Ok(result);
