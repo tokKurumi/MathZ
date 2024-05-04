@@ -5,7 +5,7 @@ using MathZ.Services.IdentityApi.Models.Dtos;
 using MathZ.Services.IdentityApi.Services.IServices;
 using MediatR;
 
-public class GetUsersUserNameQueryHandler(
+public class GetUserByUserNameQueryHandler(
     IUserAccountService userAccountService)
     : IRequestHandler<GetUserByUserNameQuery, Result<ResponseUserDto>>
 {
