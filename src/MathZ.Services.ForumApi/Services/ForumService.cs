@@ -19,7 +19,7 @@ public class ForumService(
     {
         var messageEntity = _mapper.Map<Message>(message);
 
-        await _dbContext.Messages.AddAsync(messageEntity, cancellationToken);
+        _dbContext.Messages.Add(messageEntity);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
@@ -32,7 +32,7 @@ public class ForumService(
     {
         var like = _mapper.Map<MessageLike>(messageLike);
 
-        await _dbContext.Likes.AddAsync(like, cancellationToken);
+        _dbContext.Likes.Add(like);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
@@ -48,7 +48,7 @@ public class ForumService(
     {
         var dislike = _mapper.Map<MessageDislike>(messageDislike);
 
-        await _dbContext.Dislikes.AddAsync(dislike, cancellationToken);
+        _dbContext.Dislikes.Add(dislike);
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 

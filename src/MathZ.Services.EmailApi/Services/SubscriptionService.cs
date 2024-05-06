@@ -35,7 +35,7 @@ public class SubscriptionService(
             MailingId = mailing.Id,
         };
 
-        await _mailingDbContext.Subscribers.AddAsync(subscription, cancellationToken);
+        _mailingDbContext.Subscribers.Add(subscription);
         await _mailingDbContext.SaveChangesAsync(cancellationToken);
 
         return Result.Ok();

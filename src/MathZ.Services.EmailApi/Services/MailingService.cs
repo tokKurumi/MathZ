@@ -27,7 +27,7 @@ public class MailingService(
             Description = description,
         };
 
-        await _mailingDbContext.Mailings.AddAsync(mailing, cancellationToken);
+        _mailingDbContext.Mailings.Add(mailing);
         await _mailingDbContext.SaveChangesAsync(cancellationToken);
     }
 
@@ -124,7 +124,7 @@ public class MailingService(
             Body = body,
         };
 
-        await _mailingDbContext.Emails.AddAsync(mailingEmail, cancellationToken);
+        _mailingDbContext.Emails.Add(mailingEmail);
         await _mailingDbContext.SaveChangesAsync(cancellationToken);
 
         return Result.Ok(mailing.Subscribers.Select(ms => ms.Email));
