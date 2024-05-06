@@ -29,20 +29,20 @@ public class RolesController(
 
     [HttpPost("{role}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> CreateAsync([FromRoute] string role)
+    public async Task<IActionResult> CreateAsync([FromRoute] string role, CancellationToken cancellationToken)
     {
         var command = new CreateRoleCommand(role);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }
 
     [HttpDelete("{role}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> DeleteAsync([FromRoute] string role)
+    public async Task<IActionResult> DeleteAsync([FromRoute] string role, CancellationToken cancellationToken)
     {
         var command = new DeleteRoleCommand(role);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }

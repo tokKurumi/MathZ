@@ -28,7 +28,7 @@ public class ProfilesController(
 
     [HttpGet("Me")]
     [Authorize]
-    public async Task<IActionResult> GetMyProfileAsync()
+    public async Task<IActionResult> GetMyProfileAsync(CancellationToken cancellationToken)
     {
         var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -38,34 +38,34 @@ public class ProfilesController(
         }
 
         var query = new GetUserByIdQuery(id);
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(query, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : StatusCode(500, result.Errors);
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetUserProfileByIdAsync([FromRoute] string id)
+    public async Task<IActionResult> GetUserProfileByIdAsync([FromRoute] string id, CancellationToken cancellationToken)
     {
         var query = new GetUserByIdQuery(id);
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(query, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : NotFound(result.Errors);
     }
 
     [HttpGet("UserName/{userName}")]
-    public async Task<IActionResult> GetUserProfileByUserNameAsync([FromRoute] string userName)
+    public async Task<IActionResult> GetUserProfileByUserNameAsync([FromRoute] string userName, CancellationToken cancellationToken)
     {
         var query = new GetUserByUserNameQuery(userName);
-        var user = await _mediator.Send(query);
+        var user = await _mediator.Send(query, cancellationToken);
 
         return user.IsSuccess ? Ok(user.Value) : NotFound(user.Errors);
     }
 
     [HttpGet("Email/{email}")]
-    public async Task<IActionResult> GetUserProfileByEmailAsync([FromRoute] string email)
+    public async Task<IActionResult> GetUserProfileByEmailAsync([FromRoute] string email, CancellationToken cancellationToken)
     {
         var query = new GetUserByEmailQuery(email);
-        var user = await _mediator.Send(query);
+        var user = await _mediator.Send(query, cancellationToken);
 
         return user.IsSuccess ? Ok(user.Value) : NotFound(user.Errors);
     }
@@ -81,7 +81,7 @@ public class ProfilesController(
 
     [HttpPatch("Me")]
     [Authorize]
-    public async Task<IActionResult> PatchMyProfileAsync([FromBody] JsonPatchDocument<UserPatchProfile> patchProfile)
+    public async Task<IActionResult> PatchMyProfileAsync([FromBody] JsonPatchDocument<UserPatchProfile> patchProfile, CancellationToken cancellationToken)
     {
         var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -91,24 +91,24 @@ public class ProfilesController(
         }
 
         var command = new PatchUserCommand(id, patchProfile);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : StatusCode(500, result.Errors);
     }
 
     [HttpPatch("{id}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> PatchUserProfileByIdAsync([FromRoute] string id, [FromBody] JsonPatchDocument<UserPatchProfile> patchProfile)
+    public async Task<IActionResult> PatchUserProfileByIdAsync([FromRoute] string id, [FromBody] JsonPatchDocument<UserPatchProfile> patchProfile, CancellationToken cancellationToken)
     {
         var command = new PatchUserCommand(id, patchProfile);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : StatusCode(500, result.Errors);
     }
 
     [HttpPut("Me/Password")]
     [Authorize]
-    public async Task<IActionResult> UpdateMyProfilePasswordAsync([FromBody] UpdatePasswordRequestDto updatePasswordRequest)
+    public async Task<IActionResult> UpdateMyProfilePasswordAsync([FromBody] UpdatePasswordRequestDto updatePasswordRequest, CancellationToken cancellationToken)
     {
         var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -118,24 +118,24 @@ public class ProfilesController(
         }
 
         var command = new UpdateUserPasswordCommand(id, updatePasswordRequest.CurrentPassword, updatePasswordRequest.NewPassword);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }
 
     [HttpPut("{id}/Password")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> UpdateUserProfilePasswordAsync([FromRoute] string id, [FromBody] string newPassword)
+    public async Task<IActionResult> UpdateUserProfilePasswordAsync([FromRoute] string id, [FromBody] string newPassword, CancellationToken cancellationToken)
     {
         var command = new ChangeUserPasswordCommand(id, newPassword);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }
 
     [HttpDelete("Me")]
     [Authorize]
-    public async Task<IActionResult> DeleteMyProfileAsync()
+    public async Task<IActionResult> DeleteMyProfileAsync(CancellationToken cancellationToken)
     {
         var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -145,17 +145,17 @@ public class ProfilesController(
         }
 
         var command = new DeleteUserCommand(id);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> DeleteUserProfileByIdAsync([FromRoute] string id)
+    public async Task<IActionResult> DeleteUserProfileByIdAsync([FromRoute] string id, CancellationToken cancellationToken)
     {
         var command = new DeleteUserCommand(id);
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok() : StatusCode(500, result.Errors);
     }

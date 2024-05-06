@@ -16,17 +16,17 @@ public class AuthController(
     private readonly IMediator _mediator = mediator;
 
     [HttpPost("Register")]
-    public async Task<IActionResult> RegisterAsync([FromBody] CreateUserCommand registrationRequest)
+    public async Task<IActionResult> RegisterAsync([FromBody] CreateUserCommand registrationRequest, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(registrationRequest);
+        var result = await _mediator.Send(registrationRequest, cancellationToken);
 
         return result.Succeeded ? Ok() : BadRequest(result.Errors);
     }
 
     [HttpPost("Login")]
-    public async Task<IActionResult> LoginAsync([FromBody] GetTokenQuery loginRequest)
+    public async Task<IActionResult> LoginAsync([FromBody] GetTokenQuery loginRequest, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(loginRequest);
+        var result = await _mediator.Send(loginRequest, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Errors);
     }
