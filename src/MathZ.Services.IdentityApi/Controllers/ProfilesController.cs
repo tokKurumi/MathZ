@@ -53,7 +53,7 @@ public class ProfilesController(
     }
 
     [HttpGet("UserName/{userName}")]
-    public async Task<IActionResult> GetUserProfileByUserNameAsync(string userName)
+    public async Task<IActionResult> GetUserProfileByUserNameAsync([FromRoute] string userName)
     {
         var query = new GetUserByUserNameQuery(userName);
         var user = await _mediator.Send(query);
@@ -62,7 +62,7 @@ public class ProfilesController(
     }
 
     [HttpGet("Email/{email}")]
-    public async Task<IActionResult> GetUserProfileByEmailAsync(string email)
+    public async Task<IActionResult> GetUserProfileByEmailAsync([FromRoute] string email)
     {
         var query = new GetUserByEmailQuery(email);
         var user = await _mediator.Send(query);
@@ -81,7 +81,7 @@ public class ProfilesController(
 
     [HttpPatch("Me")]
     [Authorize]
-    public async Task<IActionResult> PatchMyProfileAsync(JsonPatchDocument<UserPatchProfile> patchProfile)
+    public async Task<IActionResult> PatchMyProfileAsync([FromBody] JsonPatchDocument<UserPatchProfile> patchProfile)
     {
         var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
