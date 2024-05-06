@@ -14,9 +14,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="8.0.0-preview.5.24201.12" />
-    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.0.0-preview.5.24201.12" />
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.0-preview.5.24201.12" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="8.0.0-preview.6.24214.1" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.0.0-preview.6.24214.1" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.0-preview.6.24214.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MathZ.Services.EmailApi\MathZ.Services.EmailApi.csproj" />
