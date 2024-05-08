@@ -1,18 +1,15 @@
-﻿#pragma warning disable SA1200 // Using directives should be placed correctly
-#pragma warning disable SA1615 // Element return value should be documented
+﻿#pragma warning disable SA1117 // Parameters should be on same line or separate lines
 #pragma warning disable SA1611 // Element parameters should be documented
-#pragma warning disable SA1117 // Parameters should be on same line or separate lines
+#pragma warning disable SA1615 // Element return value should be documented
 #pragma warning disable SA1400 // Access modifier should be declared
-#pragma warning disable SA1501 // Statement should not be on a single line
-#pragma warning disable SA1127 // Generic type constraints should be on their own line
+namespace Aspire.Hosting;
+
 using System.Diagnostics;
 using System.Reflection;
 using Aspire.Hosting.Publishing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.Hosting;
-
-namespace MathZ.AppHost;
 
 internal static class ParameterExtensions
 {
@@ -94,7 +91,9 @@ internal static class ParameterExtensions
                         setUserSecrets?.WaitForExit(TimeSpan.FromSeconds(10));
                         return setUserSecrets?.ExitCode == 0;
                     }
-                    catch (Exception) { }
+                    catch (Exception)
+                    {
+                    }
                 }
             }
 
@@ -104,19 +103,22 @@ internal static class ParameterExtensions
 
     class ResourceBuilder
     {
-        public static IResourceBuilder<T> Create<T>(T resource, IDistributedApplicationBuilder distributedApplicationBuilder) where T : IResource
+        public static IResourceBuilder<T> Create<T>(T resource, IDistributedApplicationBuilder distributedApplicationBuilder)
+            where T : IResource
         {
             return new ResourceBuilder<T>(resource, distributedApplicationBuilder);
         }
     }
 
-    class ResourceBuilder<T>(T resource, IDistributedApplicationBuilder distributedApplicationBuilder) : IResourceBuilder<T> where T : IResource
+    class ResourceBuilder<T>(T resource, IDistributedApplicationBuilder distributedApplicationBuilder) : IResourceBuilder<T>
+        where T : IResource
     {
         public IDistributedApplicationBuilder ApplicationBuilder { get; } = distributedApplicationBuilder;
 
         public T Resource { get; } = resource;
 
-        public IResourceBuilder<T> WithAnnotation<TAnnotation>(TAnnotation annotation, ResourceAnnotationMutationBehavior behavior = ResourceAnnotationMutationBehavior.Append) where TAnnotation : IResourceAnnotation
+        public IResourceBuilder<T> WithAnnotation<TAnnotation>(TAnnotation annotation, ResourceAnnotationMutationBehavior behavior = ResourceAnnotationMutationBehavior.Append)
+            where TAnnotation : IResourceAnnotation
         {
             throw new NotImplementedException();
         }
