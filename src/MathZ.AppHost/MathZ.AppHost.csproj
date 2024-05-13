@@ -17,6 +17,7 @@
         <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="8.0.0-preview.7.24251.11" />
         <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.0.0-preview.7.24251.11" />
         <PackageReference Include="Aspire.Hosting.AppHost" Version="8.0.0-preview.7.24251.11" />
+        <PackageReference Include="TraceLens.Aspire" Version="6.0.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\MathZ.Services.EmailApi\MathZ.Services.EmailApi.csproj" />

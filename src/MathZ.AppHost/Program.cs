@@ -1,20 +1,30 @@
+#pragma warning disable SA1124 // Do not use regions
+
 using MathZ.AppHost;
 using MathZ.Shared;
+using TraceLens.Aspire;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-// Database passwords
+#region Trace tracking
+builder.AddTraceLens();
+#endregion
+
+#region Database passwords
 var databasePasswords = builder.Configuration.GetSection("DatabasePasswords");
 var identityDatabasePassword = databasePasswords["Identity"];
 var emailDatabasePassword = databasePasswords["Email"];
 var forumDatabasePassword = databasePasswords["Forum"];
+#endregion
 
-// Message bus
+#region Message bus
 var messageBus = builder
     .AddRabbitMQ(AspireConnections.MessageBuss.RabbitMQ)
     .WithManagementPlugin();
+#endregion
 
-// Identity
+#region Services
+#region Identity
 var identityDatabase = builder
     .AddPostgres(AspireConnections.Database.IdentityDatabaseServer, password: builder.CreateStablePassword(identityDatabasePassword!))
     .WithPgAdmin()
@@ -26,8 +36,9 @@ var identityApi = builder
     .WithJwt("JwtOptions")
     .WithReference(identityDatabase)
     .WithReference(messageBus);
+#endregion
 
-// Email
+#region Email
 var emailDatabase = builder
     .AddPostgres(AspireConnections.Database.EmailDatabaseServer, password: builder.CreateStablePassword(emailDatabasePassword!))
     .WithPgAdmin()
@@ -40,8 +51,9 @@ var emailApi = builder
     .WithSmtp("SMTP")
     .WithReference(emailDatabase)
     .WithReference(messageBus);
+#endregion
 
-// Forum
+#region Forum
 var forumDatabase = builder
     .AddPostgres(AspireConnections.Database.ForumDatabaseServer, password: builder.CreateStablePassword(forumDatabasePassword!))
     .WithPgAdmin()
@@ -52,12 +64,16 @@ var forumApi = builder
     .AddProject<Projects.MathZ_Services_ForumApi>(AspireConnections.Api.ForumApi)
     .WithJwt("JwtOptions")
     .WithReference(forumDatabase);
+#endregion
+#endregion
 
+#region Reverse Proxy
 builder.AddYarp(AspireConnections.ApiGateway)
-    .WithHttpEndpoint(port: 8080)
+    .WithHttpEndpoint(port: 8081)
     .WithReference(identityApi)
     .WithReference(emailApi)
     .WithReference(forumApi)
     .LoadFromConfiguration("ReverseProxy");
 
 await builder.Build().RunAsync();
+#endregion
