@@ -43,12 +43,7 @@ public static class Extensions
     public static IHostApplicationBuilder ConfigureAuthentication(this IHostApplicationBuilder builder)
     {
         builder.Services
-            .AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+            .AddAuthentication()
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
                 var audience = builder.Configuration.GetValue<string>(JwtEnvConstants.JwtAudience);
