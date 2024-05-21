@@ -1,4 +1,4 @@
-name: .NET
+name: Build and Test AppHost
 
 on:
   push:
@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore src/MathZ.AppHost/MathZ.AppHost.csproj
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build src/MathZ.AppHost/MathZ.AppHost.csproj --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test src/MathZ.AppHost/MathZ.AppHost.csproj --no-build --verbosity normal
