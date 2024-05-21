@@ -2,9 +2,11 @@ name: Build and Test AppHost
 
 on:
   push:
-    branches: [ "master" ]
+    paths:
+      - 'src/MathZ.AppHost/**'
   pull_request:
-    branches: [ "master" ]
+    paths:
+      - 'src/MathZ.AppHost/**'
 
 jobs:
   build:
@@ -13,13 +15,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+  
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
+    - name: Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.fsproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Install Aspire
+      run: dotnet workload install aspire
+
     - name: Restore dependencies
       run: dotnet restore src/MathZ.AppHost/MathZ.AppHost.csproj
+
     - name: Build
       run: dotnet build src/MathZ.AppHost/MathZ.AppHost.csproj --no-restore
+
     - name: Test
       run: dotnet test src/MathZ.AppHost/MathZ.AppHost.csproj --no-build --verbosity normal
