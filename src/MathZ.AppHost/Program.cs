@@ -1,5 +1,7 @@
 #pragma warning disable SA1124 // Do not use regions
 
+// test github actions
+
 using MathZ.AppHost;
 using MathZ.Shared;
 using TraceLens.Aspire;
