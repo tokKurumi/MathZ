@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mathz-databases-identitypostgres
+  labels:
+    app: mathz-databases-identitypostgres
+spec:
+  serviceName: "mathz-databases-identitypostgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mathz-databases-identitypostgres
+  template:
+    metadata:
+      labels:
+        app: mathz-databases-identitypostgres
+    spec:
+      containers:
+        - name: mathz-databases-identitypostgres
+          image: docker.io/library/postgres:16.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: mathz-databases-identitypostgres-env
+            - secretRef:
+                name: mathz-databases-identitypostgres-secrets
+          volumeMounts:
+            - name: mathz-databases-identitydatabase
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: mathz-databases-identitydatabase
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

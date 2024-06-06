@@ -1,0 +1,17 @@
+resources:
+- tracelenspgsql
+- plantuml
+- tracelens
+- mathz-messagebus-rabbitmq
+- mathz-databases-identitypostgres
+- mathz-services-identityapi
+- mathz-databases-emailpostgres
+- mathz-services-emailapi
+- mathz-databases-forumpostgres
+- mathz-services-forumapi
+- dashboard.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+

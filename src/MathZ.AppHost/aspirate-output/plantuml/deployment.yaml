@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plantuml
+  labels:
+    app: plantuml
+spec:
+  minReadySeconds: 60
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plantuml
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: plantuml
+    spec:
+      containers:
+      - name: plantuml
+        image: plantuml/plantuml-server:tomcat
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: plantuml
+          containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: plantuml-env
+      terminationGracePeriodSeconds: 180

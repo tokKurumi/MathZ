@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mathz-databases-emailpostgres
+  labels:
+    app: mathz-databases-emailpostgres
+spec:
+  serviceName: "mathz-databases-emailpostgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mathz-databases-emailpostgres
+  template:
+    metadata:
+      labels:
+        app: mathz-databases-emailpostgres
+    spec:
+      containers:
+        - name: mathz-databases-emailpostgres
+          image: docker.io/library/postgres:16.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: mathz-databases-emailpostgres-env
+            - secretRef:
+                name: mathz-databases-emailpostgres-secrets
+          volumeMounts:
+            - name: mathz-databases-emaildatabase
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: mathz-databases-emaildatabase
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

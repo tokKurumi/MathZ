@@ -1,0 +1,30 @@
+resources:
+- deployment.yaml
+- service.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+- name: mathz-services-emailapi-env
+  literals:
+    - OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES=true
+    - OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES=true
+    - OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY=in_memory
+    - ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+    - JWT_SECRET=642477c9-7840-4563-b0a2-02c677eb2db0
+    - JWT_AUDIENCE=mathz.client
+    - JWT_ISSUER=mathz.services.authapi
+    - SMTP_FROM=mathz.contact@gmail.com
+    - SMTP_HOST=smtp.gmail.com
+    - SMTP_PORT=465
+    - SMTP_USERNAME=mathz.contact@gmail.com
+    - SMTP_PASSWORD=fdzxrbzenelqphat
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://aspire-dashboard:18889
+    - OTEL_SERVICE_NAME=mathz-services-emailapi
+    - ASPNETCORE_URLS=http://+:8080;
+
+secretGenerator:
+- name: mathz-services-emailapi-secrets
+  envs:
+  - .mathz-services-emailapi.secrets

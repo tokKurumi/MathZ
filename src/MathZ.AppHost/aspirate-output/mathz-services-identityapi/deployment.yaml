@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mathz-services-identityapi
+  labels:
+    app: mathz-services-identityapi
+spec:
+  minReadySeconds: 60
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mathz-services-identityapi
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mathz-services-identityapi
+    spec:
+      containers:
+      - name: mathz-services-identityapi
+        image: mathz-services-identityapi:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8080
+        - name: https
+          containerPort: 8443
+        envFrom:
+        - configMapRef:
+            name: mathz-services-identityapi-env
+        - secretRef:
+            name: mathz-services-identityapi-secrets
+      terminationGracePeriodSeconds: 180

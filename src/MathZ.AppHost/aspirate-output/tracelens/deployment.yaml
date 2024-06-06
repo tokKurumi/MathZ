@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tracelens
+  labels:
+    app: tracelens
+spec:
+  minReadySeconds: 60
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracelens
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: tracelens
+    spec:
+      containers:
+      - name: tracelens
+        image: rogeralsing/tracelens:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: tracelens
+          containerPort: 5001
+        - name: otel
+          containerPort: 4317
+        envFrom:
+        - configMapRef:
+            name: tracelens-env
+        - secretRef:
+            name: tracelens-secrets
+      terminationGracePeriodSeconds: 180

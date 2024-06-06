@@ -1,0 +1,335 @@
+{
+  "resources": {
+    "tracelenspgsql": {
+      "type": "container.v0",
+      "connectionString": "Host={tracelenspgsql.bindings.tcp.host};Port={tracelenspgsql.bindings.tcp.port};Username=postgres;Password={tracelenspgsql-password.value}",
+      "image": "docker.io/library/postgres:16.2",
+      "env": {
+        "POSTGRES_HOST_AUTH_METHOD": "scram-sha-256",
+        "POSTGRES_INITDB_ARGS": "--auth-host=scram-sha-256 --auth-local=scram-sha-256",
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "{tracelenspgsql-password.value}"
+      },
+      "bindings": {
+        "tcp": {
+          "scheme": "tcp",
+          "protocol": "tcp",
+          "transport": "tcp",
+          "targetPort": 5432
+        }
+      }
+    },
+    "tracelensdb": {
+      "type": "value.v0",
+      "connectionString": "{tracelenspgsql.connectionString};Database=tracelensdb"
+    },
+    "plantuml": {
+      "type": "container.v0",
+      "image": "plantuml/plantuml-server:tomcat",
+      "bindings": {
+        "plantuml": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http",
+          "targetPort": 8080
+        }
+      }
+    },
+    "tracelens": {
+      "type": "container.v0",
+      "image": "rogeralsing/tracelens:latest",
+      "env": {
+        "PlantUml__RemoteUrl": "{plantuml.bindings.plantuml.url}",
+        "ConnectionStrings__DefaultConnection": "{tracelensdb.connectionString}"
+      },
+      "bindings": {
+        "tracelens": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http",
+          "targetPort": 5001
+        },
+        "otel": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http",
+          "targetPort": 4317
+        }
+      }
+    },
+    "mathz-messagebus-rabbitmq": {
+      "type": "container.v0",
+      "connectionString": "amqp://guest:{mathz-messagebus-rabbitmq-password.value}@{mathz-messagebus-rabbitmq.bindings.tcp.host}:{mathz-messagebus-rabbitmq.bindings.tcp.port}",
+      "image": "docker.io/library/rabbitmq:3.13-management",
+      "env": {
+        "RABBITMQ_DEFAULT_USER": "guest",
+        "RABBITMQ_DEFAULT_PASS": "{mathz-messagebus-rabbitmq-password.value}"
+      },
+      "bindings": {
+        "tcp": {
+          "scheme": "tcp",
+          "protocol": "tcp",
+          "transport": "tcp",
+          "targetPort": 5672
+        },
+        "management": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http",
+          "targetPort": 15672
+        }
+      }
+    },
+    "mathz-databases-identitypostgres": {
+      "type": "container.v0",
+      "connectionString": "Host={mathz-databases-identitypostgres.bindings.tcp.host};Port={mathz-databases-identitypostgres.bindings.tcp.port};Username=postgres;Password={identity-password.value}",
+      "image": "docker.io/library/postgres:16.2",
+      "volumes": [
+        {
+          "name": "mathz-databases-identitydatabase",
+          "target": "/var/lib/postgresql/data",
+          "readOnly": false
+        }
+      ],
+      "env": {
+        "POSTGRES_HOST_AUTH_METHOD": "scram-sha-256",
+        "POSTGRES_INITDB_ARGS": "--auth-host=scram-sha-256 --auth-local=scram-sha-256",
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "{identity-password.value}"
+      },
+      "bindings": {
+        "tcp": {
+          "scheme": "tcp",
+          "protocol": "tcp",
+          "transport": "tcp",
+          "targetPort": 5432
+        }
+      }
+    },
+    "mathz-databases-identitydatabase": {
+      "type": "value.v0",
+      "connectionString": "{mathz-databases-identitypostgres.connectionString};Database=mathz-databases-identitydatabase"
+    },
+    "mathz-services-identityapi": {
+      "type": "project.v0",
+      "path": "../MathZ.Services.IdentityApi/MathZ.Services.IdentityApi.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY": "in_memory",
+        "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true",
+        "JWT_SECRET": "642477c9-7840-4563-b0a2-02c677eb2db0",
+        "JWT_AUDIENCE": "mathz.client",
+        "JWT_ISSUER": "mathz.services.authapi",
+        "ConnectionStrings__mathz-databases-identitydatabase": "{mathz-databases-identitydatabase.connectionString}",
+        "ConnectionStrings__mathz-messagebus-rabbitmq": "{mathz-messagebus-rabbitmq.connectionString}"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http"
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http"
+        }
+      }
+    },
+    "mathz-databases-emailpostgres": {
+      "type": "container.v0",
+      "connectionString": "Host={mathz-databases-emailpostgres.bindings.tcp.host};Port={mathz-databases-emailpostgres.bindings.tcp.port};Username=postgres;Password={email-password.value}",
+      "image": "docker.io/library/postgres:16.2",
+      "volumes": [
+        {
+          "name": "mathz-databases-emaildatabase",
+          "target": "/var/lib/postgresql/data",
+          "readOnly": false
+        }
+      ],
+      "env": {
+        "POSTGRES_HOST_AUTH_METHOD": "scram-sha-256",
+        "POSTGRES_INITDB_ARGS": "--auth-host=scram-sha-256 --auth-local=scram-sha-256",
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "{email-password.value}"
+      },
+      "bindings": {
+        "tcp": {
+          "scheme": "tcp",
+          "protocol": "tcp",
+          "transport": "tcp",
+          "targetPort": 5432
+        }
+      }
+    },
+    "mathz-databases-emaildatabase": {
+      "type": "value.v0",
+      "connectionString": "{mathz-databases-emailpostgres.connectionString};Database=mathz-databases-emaildatabase"
+    },
+    "mathz-services-emailapi": {
+      "type": "project.v0",
+      "path": "../MathZ.Services.EmailApi/MathZ.Services.EmailApi.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY": "in_memory",
+        "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true",
+        "JWT_SECRET": "642477c9-7840-4563-b0a2-02c677eb2db0",
+        "JWT_AUDIENCE": "mathz.client",
+        "JWT_ISSUER": "mathz.services.authapi",
+        "SMTP_FROM": "mathz.contact@gmail.com",
+        "SMTP_HOST": "smtp.gmail.com",
+        "SMTP_PORT": "465",
+        "SMTP_USERNAME": "mathz.contact@gmail.com",
+        "SMTP_PASSWORD": "fdzxrbzenelqphat",
+        "ConnectionStrings__mathz-databases-emaildatabase": "{mathz-databases-emaildatabase.connectionString}",
+        "ConnectionStrings__mathz-messagebus-rabbitmq": "{mathz-messagebus-rabbitmq.connectionString}"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http"
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http"
+        }
+      }
+    },
+    "mathz-databases-forumpostgres": {
+      "type": "container.v0",
+      "connectionString": "Host={mathz-databases-forumpostgres.bindings.tcp.host};Port={mathz-databases-forumpostgres.bindings.tcp.port};Username=postgres;Password={forum-password.value}",
+      "image": "docker.io/library/postgres:16.2",
+      "volumes": [
+        {
+          "name": "mathz-databases-forumdatabase",
+          "target": "/var/lib/postgresql/data",
+          "readOnly": false
+        }
+      ],
+      "env": {
+        "POSTGRES_HOST_AUTH_METHOD": "scram-sha-256",
+        "POSTGRES_INITDB_ARGS": "--auth-host=scram-sha-256 --auth-local=scram-sha-256",
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "{forum-password.value}"
+      },
+      "bindings": {
+        "tcp": {
+          "scheme": "tcp",
+          "protocol": "tcp",
+          "transport": "tcp",
+          "targetPort": 5432
+        }
+      }
+    },
+    "mathz-databases-forumdatabase": {
+      "type": "value.v0",
+      "connectionString": "{mathz-databases-forumpostgres.connectionString};Database=mathz-databases-forumdatabase"
+    },
+    "mathz-services-forumapi": {
+      "type": "project.v0",
+      "path": "../MathZ.Services.ForumApi/MathZ.Services.ForumApi.csproj",
+      "env": {
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES": "true",
+        "OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY": "in_memory",
+        "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true",
+        "JWT_SECRET": "642477c9-7840-4563-b0a2-02c677eb2db0",
+        "JWT_AUDIENCE": "mathz.client",
+        "JWT_ISSUER": "mathz.services.authapi",
+        "ConnectionStrings__mathz-databases-forumdatabase": "{mathz-databases-forumdatabase.connectionString}"
+      },
+      "bindings": {
+        "http": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http"
+        },
+        "https": {
+          "scheme": "https",
+          "protocol": "tcp",
+          "transport": "http"
+        }
+      }
+    },
+    "tracelenspgsql-password": {
+      "type": "parameter.v0",
+      "value": "{tracelenspgsql-password.inputs.value}",
+      "inputs": {
+        "value": {
+          "type": "string",
+          "secret": true,
+          "default": {
+            "generate": {
+              "minLength": 22
+            }
+          }
+        }
+      }
+    },
+    "mathz-messagebus-rabbitmq-password": {
+      "type": "parameter.v0",
+      "value": "{mathz-messagebus-rabbitmq-password.inputs.value}",
+      "inputs": {
+        "value": {
+          "type": "string",
+          "secret": true,
+          "default": {
+            "generate": {
+              "minLength": 22,
+              "special": false
+            }
+          }
+        }
+      }
+    },
+    "identity-password": {
+      "type": "parameter.v0",
+      "value": "{identity-password.inputs.value}",
+      "inputs": {
+        "value": {
+          "type": "string",
+          "secret": true,
+          "default": {
+            "generate": {
+              "minLength": 22
+            }
+          }
+        }
+      }
+    },
+    "email-password": {
+      "type": "parameter.v0",
+      "value": "{email-password.inputs.value}",
+      "inputs": {
+        "value": {
+          "type": "string",
+          "secret": true,
+          "default": {
+            "generate": {
+              "minLength": 22
+            }
+          }
+        }
+      }
+    },
+    "forum-password": {
+      "type": "parameter.v0",
+      "value": "{forum-password.inputs.value}",
+      "inputs": {
+        "value": {
+          "type": "string",
+          "secret": true,
+          "default": {
+            "generate": {
+              "minLength": 22
+            }
+          }
+        }
+      }
+    }
+  }
+}

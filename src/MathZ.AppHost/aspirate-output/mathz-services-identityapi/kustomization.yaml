@@ -1,0 +1,25 @@
+resources:
+- deployment.yaml
+- service.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+- name: mathz-services-identityapi-env
+  literals:
+    - OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES=true
+    - OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES=true
+    - OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY=in_memory
+    - ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+    - JWT_SECRET=642477c9-7840-4563-b0a2-02c677eb2db0
+    - JWT_AUDIENCE=mathz.client
+    - JWT_ISSUER=mathz.services.authapi
+    - OTEL_EXPORTER_OTLP_ENDPOINT=http://aspire-dashboard:18889
+    - OTEL_SERVICE_NAME=mathz-services-identityapi
+    - ASPNETCORE_URLS=http://+:8080;
+
+secretGenerator:
+- name: mathz-services-identityapi-secrets
+  envs:
+  - .mathz-services-identityapi.secrets

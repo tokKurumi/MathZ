@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mathz-services-forumapi
+  labels:
+    app: mathz-services-forumapi
+spec:
+  minReadySeconds: 60
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mathz-services-forumapi
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mathz-services-forumapi
+    spec:
+      containers:
+      - name: mathz-services-forumapi
+        image: mathz-services-forumapi:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8080
+        - name: https
+          containerPort: 8443
+        envFrom:
+        - configMapRef:
+            name: mathz-services-forumapi-env
+        - secretRef:
+            name: mathz-services-forumapi-secrets
+      terminationGracePeriodSeconds: 180

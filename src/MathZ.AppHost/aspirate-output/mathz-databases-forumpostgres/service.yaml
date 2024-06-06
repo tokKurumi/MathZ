@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mathz-databases-forumpostgres
+spec:
+  type: ClusterIP
+  selector:
+    app: mathz-databases-forumpostgres
+  ports:
+  - name: tcp
+    port: 5432
+    targetPort: 5432

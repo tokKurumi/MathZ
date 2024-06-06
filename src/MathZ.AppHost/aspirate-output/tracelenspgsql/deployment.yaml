@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tracelenspgsql
+  labels:
+    app: tracelenspgsql
+spec:
+  minReadySeconds: 60
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracelenspgsql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: tracelenspgsql
+    spec:
+      containers:
+      - name: tracelenspgsql
+        image: docker.io/library/postgres:16.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: tcp
+          containerPort: 5432
+        envFrom:
+        - configMapRef:
+            name: tracelenspgsql-env
+        - secretRef:
+            name: tracelenspgsql-secrets
+      terminationGracePeriodSeconds: 180

@@ -1,0 +1,70 @@
+{
+  "projectPath": ".",
+  "inputPath": "aspirate-output",
+  "outputPath": "aspirate-output",
+  "containerImageTags": [
+    "latest"
+  ],
+  "imagePullPolicy": "IfNotPresent",
+  "containerBuilder": "docker",
+  "kubeContext": "minikube",
+  "outputFormat": "kustomize",
+  "skipFinalKustomizeGeneration": false,
+  "privateRegistryEmail": "aspir8@aka.ms",
+  "includeDashboard": true,
+  "useCustomNamespace": false,
+  "secrets": {
+    "salt": "LNkZSbV8imQAcY9r",
+    "hash": "I5uPbA5gZci0NZsxIhIlO7BYklGk7MPzTzJfiksmnRk=",
+    "secrets": {
+      "tracelenspgsql-password": {
+        "value": "LNkZSbV8imQAcY9rtJdS\u002BuWpq4c1qdlh7D6J8sbO7yFY45wp5Mk\u002BQDUeCVg9wfcc3VM="
+      },
+      "mathz-messagebus-rabbitmq-password": {
+        "value": "LNkZSbV8imQAcY9rpaTf5VwNloZcOhGjmFLqzfLM71hP34wph9sEXQ4sD3g7xf9n9lg="
+      },
+      "identity-password": {
+        "value": "LNkZSbV8imQAcY9riWbM5FAE4Q3uGmRuYbOaXvvxlltp55Mp0awYYTofFX4HssYk1GA="
+      },
+      "email-password": {
+        "value": "LNkZSbV8imQAcY9rT2yLemWB5D3CqrWaAyay5vny9wgt\u002B5Ae4\u002Bo4RBcicV8b3/0R6Fs="
+      },
+      "forum-password": {
+        "value": "LNkZSbV8imQAcY9rO151EnyPboVPzWk1IGwiyNDQxhZG6cQJ/e8gew9iFWsl4tMr2kg="
+      },
+      "tracelenspgsql": {
+        "POSTGRES_PASSWORD": "LNkZSbV8imQAcY9rtJdS\u002BuWpq4c1qdlh7D6J8sbO7yFY45wp5Mk\u002BQDUeCVg9wfcc3VM="
+      },
+      "tracelensdb": {},
+      "plantuml": {},
+      "tracelens": {
+        "ConnectionStrings__DefaultConnection": "LNkZSbV8imQAcY9rLtYvFegNcDebZxffbBhu1unp0Bsh/oYR0P8fbg4pM3ol\u002B9xlwH/wPHvl4O\u002BAE9tOtzxSimH1cG\u002B/rneVG5YPX2NjRMA2D\u002B2ATvBYmBPdCk1iAmP8Va0NjwQVCuGTAAtLVW4CVx5B5BakkBRaCZGv5HbgaTM="
+      },
+      "mathz-messagebus-rabbitmq": {},
+      "mathz-databases-identitypostgres": {
+        "POSTGRES_PASSWORD": "LNkZSbV8imQAcY9riWbM5FAE4Q3uGmRuYbOaXvvxlltp55Mp0awYYTofFX4HssYk1GA="
+      },
+      "mathz-databases-identitydatabase": {},
+      "mathz-services-identityapi": {
+        "ConnectionStrings__mathz-databases-identitydatabase": "LNkZSbV8imQAcY9r6xGtdxdDceyz75KvIhiATenp0Bsh55UE2\u002BBebwEuIn83\u002BdUtvXnmLSikvajLWOFOpilOjn\u002BrHXCiqT7HXcBOX2ZxUsEvAfKBTud/pyn\u002BEUBIbmDQbYs\u002BqjMafPymeHwFfGgvVEpL/SncsgVqUoK5xWioSTCunpcrJjHNqJF\u002BPoSyfzUCYmxVMpJDd6D76oWzfEoqq0TuynHrgi0=",
+        "ConnectionStrings__mathz-messagebus-rabbitmq": "LNkZSbV8imQAcY9r8ZqmmMuvZQDPYa3f3\u002BHz\u002BcDr0h8mpdsXxv8Af1oJCVFh2eUmySTDPxC\u002BopDXRcFy6yh0q2HxOXeq8G6XGoAdA1ZgQsBsEv6GEf5kuSyjVhMMZw=="
+      },
+      "mathz-databases-emailpostgres": {
+        "POSTGRES_PASSWORD": "LNkZSbV8imQAcY9rT2yLemWB5D3CqrWaAyay5vny9wgt\u002B5Ae4\u002Bo4RBcicV8b3/0R6Fs="
+      },
+      "mathz-databases-emaildatabase": {},
+      "mathz-services-emailapi": {
+        "ConnectionStrings__mathz-databases-emaildatabase": "LNkZSbV8imQAcY9rbdU8aED0nbi8OMrzlix1Lenp0Bsh55UE2\u002BBebwEuIn83\u002BdUtvXXvKS\u002B8pLPBXOlPtz0Hu2PiOSLl6TDAUqYPAUFsVt4kXe\u002BLAON3pjjqWHVaJkPGcYot\u002BBkKFcHgPCweQX89eQtYpTHUsSt0Er/4xXnnbDO7jJB3ODWErYonMp/rejYXcGtHbJJdO6Dz64qzdFwyvEA=",
+        "ConnectionStrings__mathz-messagebus-rabbitmq": "LNkZSbV8imQAcY9r8ZqmmMuvZQDPYa3f3\u002BHz\u002BcDr0h8mpdsXxv8Af1oJCVFh2eUmySTDPxC\u002BopDXRcFy6yh0q2HxOXeq8G6XGoAdA1ZgQsBsEv6GEf5kuSyjVhMMZw=="
+      },
+      "mathz-databases-forumpostgres": {
+        "POSTGRES_PASSWORD": "LNkZSbV8imQAcY9rO151EnyPboVPzWk1IGwiyNDQxhZG6cQJ/e8gew9iFWsl4tMr2kg="
+      },
+      "mathz-databases-forumdatabase": {},
+      "mathz-services-forumapi": {
+        "ConnectionStrings__mathz-databases-forumdatabase": "LNkZSbV8imQAcY9r0mj1aQMmkdCm/JZLLngACunp0Bsh55UE2\u002BBebwEuIn83\u002BdUtvXbtOjO9pLPBXOlPtz0Hu2PiOSLl6TDAUqYPAUFsVt4kXe\u002BLAON3pjjqWHVaJkPGcYot\u002BDAoJN\u002BLLngJX3olRhMYwQXqjAVOIKz4xXnnbDO7jJB3ODWErYonMp/rejYXcGtHbJFfKLzy64qzdFwyvEA="
+      }
+    }
+  },
+  "processAllComponents": true
+}

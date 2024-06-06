@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mathz-databases-forumpostgres
+  labels:
+    app: mathz-databases-forumpostgres
+spec:
+  serviceName: "mathz-databases-forumpostgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mathz-databases-forumpostgres
+  template:
+    metadata:
+      labels:
+        app: mathz-databases-forumpostgres
+    spec:
+      containers:
+        - name: mathz-databases-forumpostgres
+          image: docker.io/library/postgres:16.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: mathz-databases-forumpostgres-env
+            - secretRef:
+                name: mathz-databases-forumpostgres-secrets
+          volumeMounts:
+            - name: mathz-databases-forumdatabase
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: mathz-databases-forumdatabase
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
